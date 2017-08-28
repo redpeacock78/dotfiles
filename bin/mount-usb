@@ -1,0 +1,15 @@
+#!/bin/bash
+ 
+if [ $1 == 'iTunes' ]; then
+    if [ $2 == 'mount' ]; then
+        sudo umount /Volumes/HD-PNFU3
+        sudo mkdir /Volumes/iTunes
+	sudo mount -t ntfs -o nobrowse,rw /dev/disk2s1 /Volumes/iTunes
+        ln -s /Volumes/iTunes ~/iTunes
+	ln -s /Volumes/iTunes ~/Desktop/iTunes
+    elif [ $2 == 'unmount' ]; then
+        sudo umount /Volumes/iTunes
+        rm /Users/redpeacock78/iTunes
+	rm /Users/redpeacock78/Desktop/iTunes
+    fi
+fi

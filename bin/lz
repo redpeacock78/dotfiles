@@ -1,0 +1,94 @@
+#! /bin/bash
+
+#変数指定(基本)
+TMP=`mktemp`
+#変数指定(変則)
+TMP2=`mktemp`
+
+#変数指定(基本2)
+lz=`echo $@ | sed "s/^[-]*[a-z=]*[ ]$//"`
+
+###ここから###
+
+#ディレクトリのみ表示
+if [[ $1 == '-d' ]]; then
+ls -F | grep / > $TMP && column $TMP
+elif [[ $1 == '--directory' ]]; then
+ls -F | grep / > $TMP && column $TMP
+
+#シンボリックリンクのみ表示
+elif [[ $1 == '-l' ]]; then
+ls -F | grep -E '@$' > $TMP && column $TMP
+elif [[ $1 == '--link' ]]; then
+ls -F | grep -E '@$' > $TMP && column $TMP
+
+#ディレクトリ(隠しのみ)表示
+elif [[ $1 == '-dh' ]]; then
+ls -dF .* | grep / > $TMP && sed '1,2d' $TMP > $TMP2 && column $TMP2
+elif [[ $1 == '--directory=hidden' ]]; then
+ls -dF .* | grep / > $TMP && sed '1,2d' $TMP > $TMP2 && column $TMP2
+elif [[ $1 == '-hd' ]]; then
+ls -dF .* | grep / > $TMP && sed '1,2d' $TMP > $TMP2 && column $TMP2
+elif [[ $1 == '--hidden-directory' ]]; then
+ls -dF .* | grep / > $TMP && sed '1,2d' $TMP > $TMP2 && column $TMP2
+
+#シンボリックリンク(隠しのみ)表示
+elif [[ $1 == '-lh' ]]; then
+ls -dF .* | grep -E '@$' > $TMP && column $TMP
+elif [[ $1 == '--link=hidden' ]]; then
+ls -dF .* | grep -E '@$' > $TMP && column $TMP
+elif [[ $1 == '-hl' ]]; then
+ls -dF .* | grep -E '@$' > $TMP && column $TMP
+elif [[ $1 == '--hidden-link' ]]; then
+ls -dF .* | grep -E '@$' > $TMP && column $TMP
+
+#ファイルのみ表示
+elif [[ $1 == '-f' ]]; then
+ls -F $lz | grep -v / > $TMP && column $TMP
+elif [[ $1 == '--file' ]]; then
+ls -F $lz | grep -v / > $TMP && column $TMP
+
+#実行ファイルのみ表示
+elif [[ $1 == '-x' ]]; then
+ls -F $lz | grep -v / | grep '*$' > $TMP && column $TMP
+elif [[ $1 == '-extention' ]]; then
+ls -F | grep -v / | grep '*$' > $TMP && column $TMP
+
+#ファイル(隠しのみ)表示
+elif [[ $1 == '-fh' ]] ;then
+ls -dF .* | grep -v / > $TMP && column $TMP
+elif [[ $1 == '--file=hidden' ]]; then
+ls -dF .* | grep -v / > $TMP && column $TMP
+elif [[ $1 == '-hf' ]]; then
+ls -dF .* | grep -v / > $TMP && column $TMP
+elif [[ $1 == '--hidden-file' ]]; then
+ls -dF .* | grep -v / > $TMP && column $TMP
+
+#実行ファイル(隠しのみ)表示
+elif [[ $1 == '-xh' ]]; then
+ls -dF .* | grep -v / | grep '*$' > $TMP && column $TMP
+elif [[ $1 == '--extention=hidden' ]]; then
+ls -dF .* | grep -v / | grep '*$' > $TMP && column $TMP
+elif [[ $1 == '-hx' ]]; then
+ls -dF .* | grep -v / | grep '*$' > $TMP && column $TMP
+elif [[ $1 == '--hidden-extention' ]]; then
+ls -dF .* | grep -v / | grep '*$' > $TMP && column $TMP
+
+#隠しディレクトリと隠しファイルを表示
+elif [[ $1 == '-h' ]]; then
+ls -dF .* | grep / > $TMP && ls -dF .* | grep -v / >> $TMP && sed '1,2d' $TMP > $TMP2 && column $TMP2
+elif [[ $1 == '--hidden' ]]; then
+ls -dF .* | grep / > $TMP && ls -dF .* | grep -v / >> $TMP && sed '1,2d' $TMP > $TMP2 && column $TMP2
+
+#ありとあらゆる全てを表示
+elif [[ $1 == '-a' ]]; then
+ls -dF .* | grep / > $TMP && ls -F | grep / >> $TMP && ls -dF .* | grep -v / >> $TMP && ls -F | grep -v / >> $TMP && sed '1,2d' $TMP > $TMP2 && column $TMP2
+elif [[ $1 == '--all' ]]; then
+ls -dF .* | grep / > $TMP && ls -F | grep / >> $TMP && ls -dF .* | grep -v / >> $TMP && ls -F | grep -v / >> $TMP && sed '1,2d' $TMP > $TMP2 && column $TMP2
+
+#ディレクトリとファイル(隠しなし)を表示
+else
+ls -F | grep / > $TMP && ls -F | grep -v / >> $TMP && column $TMP
+fi
+
+trap "rm -rf $TMP | rm -rf $TMP2" EXIT

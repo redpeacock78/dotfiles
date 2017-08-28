@@ -1,0 +1,47 @@
+#!/bin/sh
+
+word=`echo "$@" | sed "s/^--[a-z0-9_]*//" | sed "s/^[ ]//"`
+
+while getopts ":-:" opt; do
+      case "$opt" in
+           -)
+	     case "${OPTARG}" in
+	      #文字色
+		  red)
+		     gecho -e "\e[31m$(figlet $word | sed 's/\\\\/##/g')" | while IFS= read -r line; do echo "$line" | sed 's/##/\\\\/g' && sleep 0.3s </dev/null; done;;
+		  green)
+		       gecho -e "\e[32m$(figlet $word | sed 's/\\\\/##/g')" | while IFS= read -r line; do echo "$line" | sed 's/##/\\\\/g' && sleep 0.3s </dev/null; done;;
+		  yellow)
+			    gecho -e "\e[33m$(figlet $word | sed 's/\\\\/##/g')" | while IFS= read -r line; do echo "$line" | sed 's/##/\\\\/g' && sleep 0.3s </dev/null; done;;
+		  blue)
+		      gecho -e "\e[34m$(figlet $word | sed 's/\\\\/##/g')" | while IFS= read -r line; do echo "$line" | sed 's/##/\\\\/g' && sleep 0.3s </dev/null; done;;
+		  white)
+               figlet $word | sed 's/\\\\/##/g' | while IFS= read -r line; do echo "$line" | sed 's/##/\\\\/g' && sleep 0.3s </dev/null; done;;
+          #文字種
+          cool)
+              coolbanner "$word" 30 | sed '/^$/d' | while IFS= read -r line; do echo "$line" && sleep 0.3s </dev/null; done;;
+          cool_r)
+                gecho -e "\e[31m$(coolbanner "$word")" | sed '/^$/d' | while IFS= read -r line; do echo "$line" && sleep 0.3s </dev/null; done;;
+          cool_g)
+				gecho -e "\e[32m$(coolbanner "$word")" | sed '/^$/d' | while IFS= read -r line; do echo "$line" && sleep 0.3s </dev/null; done;;
+		  cool_y)
+				gecho -e "\e[33m$(coolbanner "$word")" | sed '/^$/d' | while IFS= read -r line; do echo "$line" && sleep 0.3s </dev/null; done;;
+		  cool_b)
+				gecho -e "\e[34m$(coolbanner "$word")" | sed '/^$/d' | while IFS= read -r line; do echo "$line" && sleep 0.3s </dev/null; done;;
+          #emoji
+          banana)
+			    figlet $word | sed "s/_/\xf0\x9f\x8d\x8c/g" | sed "s/|/\xf0\x9f\x8d\x8c/g" | sed "s/(/\xf0\x9f\x8d\x8c/g" | sed "s/\//\xf0\x9f\x8d\x8c/g" | sed "s/\\\\/\xf0\x9f\x8d\x8c/g" | sed "s/V/\xf0\x9f\x8d\x8c/g" | sed "s/</\xf0\x9f\x8d\x8c/g" | sed "s/./\xf0\x9f\x8d\x8c/g" | sed "s/\'/\xf0\x9f\x8d\x8c/g" | while IFS= read -r line; do echo "$line" && sleep 0.3s </dev/null; done;;
+		  cool_banana)
+				     coolbanner "$word" | sed '/^$/d' | sed "s/#/\xf0\x9f\x8d\x8c/g" | while IFS= read -r line; do echo "$line" && sleep 0.3s </dev/null; done;;
+		  cool_tm)
+				 coolbanner "$word" | sed '/^$/d' | sed "s/#/\xE2\x84\xA2/g" | while IFS= read -r line; do echo "$line" && sleep 0.3s </dev/null; done;;
+		  cool_yu)
+                 coolbanner "$word" | sed '/^$/d' | sed "s/#/\xE2\x99\xA8/g" | while IFS= read -r line; do echo "$line" && sleep 0.3s </dev/null; done;;
+		  #読み上げ
+		  kyoko)
+               figlet $word | sed 's/\\\\/##/g' | while IFS= read -r line; do echo "$line" | sed 's/##/\\\\/g' && sleep 0.3s </dev/null; done && say -v Kyoko "$word";;
+          fred)
+			  figlet $word | sed 's/\\\\/##/g' | while IFS= read -r line; do echo "$line" | sed 's/##/\\\\/g' && sleep 0.3s </dev/null; done && say -v Fred "$word";;
+	     esac;;
+      esac
+done

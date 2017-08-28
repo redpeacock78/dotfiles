@@ -1,0 +1,7 @@
+#! /bin/bash
+
+##BIGIN##
+##変数指定##
+PRICE=`echo $( echo $@ | sed "s/[ ]/+/g" ) | bc`
+
+echo ¥$( echo $( echo "$PRICE*0.08+$PRICE" | bc ) | sed "s/\.[0-9]*$//g" )

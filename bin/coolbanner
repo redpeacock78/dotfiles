@@ -1,0 +1,29 @@
+#!/bin/sh
+
+[ $# -lt 1 ] && echo 'Usage: coolbanner STRING [HEIGHT]' && exit
+
+string="$1"
+if [ -z $2 ]; then
+  height=30
+else
+  height="$2"
+fi
+
+banner -w $height "$string"            |\
+awk '{printf "%-'$height's\n", $0}'    |\
+tr '# ' '+-'                           |\
+awk '
+  {
+    for(i=1;i<=NF;i++)a[NR,i]=$i
+  } END {
+    for(j=1;j<=NF;j++){
+      for(i=1;i<=NR;i++){
+        printf a[i,j]
+      }
+      print ""
+    }
+  }
+' FS=                                  |\
+tac                                |\
+tr '+-' "# "                           |\
+sed 's/ *$//'

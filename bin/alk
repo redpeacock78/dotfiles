@@ -1,0 +1,14 @@
+#! /bin/bash
+
+for arg in $@; do
+  if [ "$arg" = "$1" ]; then
+    QUERY=${QUERY}${arg}
+  else
+    QUERY=${QUERY}+${arg}
+  fi
+done
+
+query=`echo ${QUERY} | tr + ' ' | nkf -wMQ | tr = % | sed "s/^%2D....//" | sed "s/^.%20//"| sed "s/^..%20//" | sed "s/^%2D.....//" | sed "s/^%20//" | sed "s/^.%20//"`
+
+alk="w3m http://eow.alc.co.jp/search?q=$query"
+$alk

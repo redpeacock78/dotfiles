@@ -1,0 +1,268 @@
+#! /bin/bash
+
+name=`echo $@ | sed "s/^-.[ ]//" | sed "s/^-..[ ]//" | sed "s/^-.//" | tr -s 'A-z'`
+
+greeting="Hello, ${name}!"
+
+
+while getopts "A:M:E:N:-:r:s:m:i:e:h:" option;
+do
+  case "$option" in
+      r)
+        greeting="Hello, Mr.${name}!"
+        case "${OPTARG}" in
+            A)
+              greeting="Good afternoon, Mr.${name}!";;
+            M)
+              greeting="Good morning, Mr.${name}!";;            
+            E)
+              greeting="Good evening, Mr.${name}!";;
+            N)
+              greeting="Good night, Mr.${name}!";;
+        esac;;            
+      s)
+        greeting="Hello, Ms.${name}!"
+        case "${OPTARG}" in
+            A)
+              greeting="Good afternoon, Ms.${name}!";;
+            M)
+              greeting="Good morning, Ms.${name}!";;
+            E)
+              greeting="Good evening, Ms.${name}!";;
+            N)
+              greeting="Good night, Ms.${name}!";;
+        esac;;
+      m)
+        greeting="Hello, Mrs.${name}!"
+        case "${OPTARG}" in
+            A)
+              greeting="Good afternoon, Mrs.${name}!";;
+            M)
+              greeting="Good morning, Mrs.${name}!";;
+            E)
+              greeting="Good evening, Mrs.${name}!";;
+            N)
+              greeting="Good night, Mrs.${name}!";;
+        esac;;
+      i)
+        greeting="Hello, Miss.${name}!"
+        case "${OPTARG}" in
+            A)
+              greeting="Good afternoon, Miss.${name}!";;
+            M)
+              greeting="Good morning, Miss.${name}!";;
+            E)
+              greeting="Good evening, Miss.${name}!";;
+            N)
+              greeting="Good night, Miss.${name}!";;
+        esac;;
+      e)
+        greeting="Hello, ${name},Esq.!"
+        case "${OPTARG}" in
+            A)
+              greeting="Good afternoon, ${name},Esq.!";;
+            M)
+              greeting="Good morning, ${name},Esq.!";;
+            E)
+              greeting="Good evening, ${name},Esq.!";;
+            N)
+              greeting="Good night, ${name},Esq.!";;
+        esac;;
+      A)
+        greeting="Good afternoon, ${name}!"
+        case "${OPTARG}" in
+            r)
+              greeting="Good afternoon, Mr.${name}!";;
+            s)
+              greeting="Good afternoon, Ms.${name}!";;
+            m|m*)
+              greeting="Good afternoon, Mrs.${name}!";;
+            i)
+              greeting="Good afternoon, Miss.${name}!";;
+            e)
+              greeting="Good afternoon, ${name},Esq.!";;
+        esac;;
+      M)
+        greeting="Good morning, ${name}!"
+        case "${OPTARG}" in
+            r)
+              greeting="Good morning, Mr.${name}!";;
+            s)
+              greeting="Good morning, Ms.${name}!";;
+            m)
+              greeting="Good morning, Mrs.${name}!";;
+            i)
+              greeting="Good morning, Miss.${name}!";;
+            e)
+              greeting="Good morning, ${name},Esq.!";;
+        esac;;
+      E)
+        greeting="Good evening, ${name}!"
+        case "${OPTARG}" in
+            r)
+              greeting="Good evening, Mr.${name}!";;
+            s)
+              greeting="Good evening, Ms.${name}!";;
+            m)
+              greeting="Good evening, Mrs.${name}!";;
+            i)
+              greeting="Good evening, Miss.${name}!";;
+            e)
+              greeting="Good evening, ${name},Esq.!";;
+        esac;;
+      N)
+        greeting="Good night, ${name}!"
+        case "${OPTARG}" in
+            r)
+              greeting="Good night, Mr.${name}!";;
+            s)
+              greeting="Good night, Ms.${name}!";;
+            m)
+              greeting="Good night, Mrs.${name}!";;
+            i)
+              greeting="Good night, Miss.${name}!";;
+            e)
+              greeting="Good night, ${name},Esq.!";;
+        esac;;
+      \?)
+         echo -e "\e[1;31mUsage\e[0m: \e[1mgreet -[rsmie] -M[rsmie] -A[rsmie] -E[rsmie] -N[rsmie]\e[0m"
+         exit 1;;
+      h)
+        case "${OPTARG}" in
+            elp)
+                greeting=`echo "
+\e[1;4mgreetingコマンドについて\e[0m
+
+
+デフォルトでは、\e[1m"Hello, [Your_entered_name]!"\e[0mのように表示します。
+
+\e[1m〜敬称〜\e[0m
+\e[1mオプションなし\e[0m - 敬称は付けません。
+
+\e[1m[-r]\e[0m - Mr.を付けます。
+\e[1m[-s]\e[0m - Ms.を付けます。
+\e[1m[-m]\e[0m - Mrs.を付けます。
+\e[1m[-i]\e[0m - Miss.を付けます。
+\e[1m[-e]\e[0m - 最後にEsq.を付けます。
+
+
+\e[1m〜挨拶〜\e[0m
+\e[1mオプションなし\e[0m - デフォルトの"Hello"のまま表示します。
+
+\e[1m-M[rsmie]\e[0m - "Hello"を"Good morning"にします。
+\e[1m-A[rsmie]\e[0m - "Hello"を"Good afternoon"にします。
+\e[1m-E[rsmie]\e[0m - "Hello"を"Good evening"にします。
+\e[1m-N[rsmie]\e[0m - "Hello"を"Good night"にします。
+\e[1m-H[rsmie]\e[0m - "Hello"を"Hi"にします。
+\e[1m-D[rsmie]\e[0m - "Hello"を"Dear"にします。
+
+\e[1m＊挨拶のオプションは敬称のオプションにも対応しています。\e[0m
+
+
+\e[1m〜入力例〜\e[0m
+\e[1m・挨拶がGood mooning、敬称がMr.の場合\e[0m
+
+\e[1;32mUser@User\e[0m:\e[1;34m~\e[0m$ greeting -rM [Your_entered_name]
+\e[1mGood morning, Mr.[Your_entered_name]!\e[0m
+
+\e[1;32mUser@User\e[0m:\e[1;34m~\e[0m$ greeting -Mr [Your_entered_name]
+\e[1mGood morning, Mr.[Your_entered_name]!\e[0m
+
+\e[1m＊敬称と挨拶のオプションは逆順に入力されても対応します。\e[0m
+
+
+\e[1m〜その他〜\e[0m
+\e[1m[-help|help_ja|help_en]\e[0m - ヘルプを表示します。
+\e[1m[-v|version]\e[0m - バージョンを表示します。
+"`;;
+            elp_ja)
+                greeting=`echo "
+\e[1;4mgreetingコマンドについて\e[0m
+
+
+デフォルトでは、\e[1m"Hello, [Your_entered_name]!"\e[0mのように表示します。
+
+\e[1m〜敬称〜\e[0m
+\e[1mオプションなし\e[0m - 敬称は付けません。
+
+\e[1m[-r]\e[0m - Mr.を付けます。
+\e[1m[-s]\e[0m - Ms.を付けます。
+\e[1m[-m]\e[0m - Mrs.を付けます。
+\e[1m[-i]\e[0m - Miss.を付けます。
+\e[1m[-e]\e[0m - 最後にEsq.を付けます。
+
+
+\e[1m〜挨拶〜\e[0m
+\e[1mオプションなし\e[0m - デフォルトの"Hello"のまま表示します。
+
+\e[1m-M[rsmie]\e[0m - "Hello"を"Good morning"にします。
+\e[1m-A[rsmie]\e[0m - "Hello"を"Good afternoon"にします。
+\e[1m-E[rsmie]\e[0m - "Hello"を"Good evening"にします。
+\e[1m-N[rsmie]\e[0m - "Hello"を"Good night"にします。
+\e[1m-H[rsmie]\e[0m - "Hello"を"Hi"にします。
+\e[1m-D[rsmie]\e[0m - "Hello"を"Dear"にします。
+
+\e[1m＊挨拶のオプションは敬称のオプションにも対応しています。\e[0m
+
+
+\e[1m〜入力例〜\e[0m
+\e[1m・挨拶がGood mooning、敬称がMr.の場合\e[0m
+
+\e[1;32mUser@User\e[0m:\e[1;34m~\e[0m$ greeting -rM [Your_entered_name]
+\e[1mGood morning, Mr.[Your_entered_name]!\e[0m
+
+\e[1;32mUser@User\e[0m:\e[1;34m~\e[0m$ greeting -Mr [Your_entered_name]
+\e[1mGood morning, Mr.[Your_entered_name]!\e[0m
+
+\e[1m＊敬称と挨拶のオプションは逆順に入力されても対応します。\e[0m
+
+
+\e[1m〜その他〜\e[0m
+\e[1m[-help|help_ja|help_en]\e[0m - ヘルプを表示します。
+\e[1m[-v|version]\e[0m - バージョンを表示します。
+"`;;
+            elp_en)
+                   greeting=`echo "
+\e[1;4mAbout the greet command\e[0m
+
+
+By default, it displays as \e[1m"Hello, [Your_entered_name]!"\e[0m
+
+\e[1m~Honorific title ~\e[0m
+\e[1mNo options\e[0m - no title is given.
+\e[1m[-r]\e[0m - Add "Mr.".
+\e[1m[-s]\e[0m - Add "Ms.".
+\e[1m[-m]\e[0m - Add "Mrs.".
+\e[1m[-i]\e[0m - Add "Miss.".
+\e[1m[-e]\e[0m - Add "Esq."
+
+
+\e[1m~Greeting~\e[0m
+\e[1mNo options\e[0m - Display with default "Hello".
+\e[1m-M [rsmie]\e[0m - Set "Hello" to "Good morning".
+\e[1m-A [rsmie]\e[0m - Set "Hello" to "Good afternoon".
+\e[1m-E [rsmie]\e[0m - Set "Hello" to "Good evening".
+\e[1m-N [rsmie]\e[0m - Set "Hello" to "Good night".\n
+
+\e[1m* Greeting options also correspond to the title option.\e[0m
+
+
+\e[1m~Input example~\e[0m
+\e[1m*Greeting is "Good mooning", Title is "Mr.".\e[0m
+
+\e[1;32mUser@User\e[0m:\e[1;34m~\e[0m$ greeting -rM [Your_entered_name]
+\e[1mGood morning, Mr.[Your_entered_name]!\e[0m
+
+\e[1;32mUser@User\e[0m:\e[1;34m~\e[0m$ greeting -Mr [Your_entered_name]
+\e[1mGood morning, Mr.[Your_entered_name]!\e[0m
+
+\e[1m*Honorific titles and greeting options correspond even if they are entered in reverse order.\e[0m
+
+\e[1m~Others~\e[0m
+\e[1m[-help|help_ja|help_en]\e[0m - Display help.
+\e[1m[-v|version]\e[0m - Display version.
+"`;;
+        esac;;
+  esac
+done
+echo -e "\e[1m$greeting\e[0m"

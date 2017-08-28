@@ -1,0 +1,69 @@
+#! /bin/bash
+wiki="w3m https://ja.wikipedia.org/wiki/"$1""
+while getopts CmWbqSsnvdacwAyuph option 
+do
+ case $option in
+    C)
+      wiki="w3m https://commons.wikimedia.org/wiki/"$2"?uselang=ja";;    
+    m)
+      wiki="w3m https://meta.wikimedia.org/wiki/"$2"";;
+    W)
+      wiki="w3m https://ja.wiktionary.org/wiki/"$2"";;
+    b)
+      wiki="w3m https://ja.wikibooks.org/wiki/"$2"";;
+    q)
+      wiki="w3m https://ja.wikiquote.org/wiki/"$2"";;
+    S)
+      wiki="w3m https://ja.wikisource.org/wiki/"$2"";;
+    s)
+      wiki="w3m https://species.wikimedia.org/wiki/"$2"";;
+    n)
+      wiki="w3m https://ja.wikinews.org/wiki/"$2"";;
+    v)
+      wiki="w3m https://ja.wikiversity.org/wiki/"$2"";;
+    d)
+      wiki="w3m https://www.wikidata.org/wiki/"$2"";;
+    a)
+      wiki="w3m http://ansaikuropedia.org/wiki/"$2"";;
+    c)
+      wiki="w3m https://wiki.chakuriki.net/index.php/";;
+    w)
+      wiki="w3m http://ja.starwars.wikia.com/wiki/"$2"";;
+    u)
+      wiki="w3m https://wiki.ubuntulinux.jp/";;
+    A)
+      wiki="w3m http://ja.anime.wikia.com/wiki/"$2"";;
+    y)
+      wiki="w3m http://yaruo.wikia.com/wiki/"$2"";;
+    p)
+      wiki="w3m https://wiki.xn--rckteqa2e.com/wiki/"$2"";;
+    h)
+      echo "wikiコマンドで使えるオプションについては以下の通りです。
+
+オプション指定無し - ウィキペディアを表示します。
+[-C] - ウィキペディア・コモンズを表示します。
+[-m] - メタウィキを表示します。
+[-W] - ウィクショナリーを表示します。
+[-b] - ウィキブックスを表示します。
+[-q] - ウィキクォートを表示します。
+[-S] - ウィキソースを表示します。
+[-s] - ウィキスピーシーズを表示します。
+[-n] - ウィキニュースを表示します。
+[-v] - ウィキバーシティを表示します。
+[-d] - ウィキデータを表示します。
+[-a] - アンサイクロペディアを表示します。
+[-c] - chakuwikiを表示します。
+[-w] - Wookieepediaを表示します。
+[-A] - Anipediaを表示します。
+[-y] - やる夫 Wikiを表示します。
+[-u] - Ubuntu Japanese Wikiを表示します。
+[-h] - ヘルプを表示します。
+
+また、検索したい言葉を、"wiki [オプション] [検索したい言葉]"のようにするとオプションに対応したページでの検索結果が閲覧できます。"
+      exit 1;;
+    \?)
+      echo "Usage: wiki [-m] [-C] [-W] [-b] [-q] [-S] [-s] [-n] [-v] [-d] [-u] [-c] [-w] [-A] [-y] [-h]"
+      exit 1;;
+   esac
+done
+$wiki

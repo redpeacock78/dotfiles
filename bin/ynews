@@ -1,0 +1,25 @@
+#! /bin/bash
+
+news=`wget -q -O - "http://news.yahoo.co.jp/pickup/rss.xml" | grep -o "<title[^>]*>[^<]*</title>" | sed -e "s/<title>\(.*\)<\/title>/\1/"`
+while getopts SwdeEsil option;
+do
+  case $option in
+      S)
+        news=`wget -q -O - "http://news.yahoo.co.jp/pickup/science/rss.xml" | grep -o "<title[^>]*>[^<]*</title>" | sed -e "s/<title>\(.*\)<\/title>/\1/"`;;
+      w)
+        news=`wget -q -O - "http://news.yahoo.co.jp/pickup/world/rss.xml" | grep -o "<title[^>]*>[^<]*</title>" | sed -e "s/<title>\(.*\)<\/title>/\1/"`;;
+      d)
+        news=`wget -q -O - "http://news.yahoo.co.jp/pickup/domestic/rss.xml" | grep -o "<title[^>]*>[^<]*</title>" | sed -e "s/<title>\(.*\)<\/title>/\1/"`;;
+      e)
+        news=`wget -q -O - "http://news.yahoo.co.jp/pickup/economy/rss.xml" | grep -o "<title[^>]*>[^<]*</title>" | sed -e "s/<title>\(.*\)<\/title>/\1/"`;;
+      E)
+        news=`wget -q -O - "http://news.yahoo.co.jp/pickup/entertainment/rss.xml" | grep -o "<title[^>]*>[^<]*</title>" | sed -e "s/<title>\(.*\)<\/title>/\1/"`;;
+      s)
+        news=`wget -q -O - "http://news.yahoo.co.jp/pickup/sports/rss.xml" | grep -o "<title[^>]*>[^<]*</title>" | sed -e "s/<title>\(.*\)<\/title>/\1/"`;;
+      i)
+        news=`wget -q -O - "http://news.yahoo.co.jp/pickup/computer/rss.xml" | grep -o "<title[^>]*>[^<]*</title>" | sed -e "s/<title>\(.*\)<\/title>/\1/"`;;
+      l)
+        news=`wget -q -O - "http://news.yahoo.co.jp/pickup/local/rss.xml" | grep -o "<title[^>]*>[^<]*</title>" | sed -e "s/<title>\(.*\)<\/title>/\1/"`;;
+  esac
+done
+echo "$news"

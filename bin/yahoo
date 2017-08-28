@@ -1,0 +1,549 @@
+#! /bin/bash
+
+for arg in $@;
+   do
+       if [ "$arg" = "$1" ]; then
+          QUERY=${QUERY}${arg}
+      else
+          QUERY=${QUERY}+${arg}
+       fi
+   done
+query=`echo ${QUERY} | sed -e "s/^-.+/ /" | sed "s/^-..+//" | sed "s/^-...+//" | sed "s/^-....+//" | sed "s/^-.....+//" | sed "s/^-......+//" | sed "s/^-.......+//" | sed "s/^-........+//" | tr + ' ' | nkf -wMQ | tr = %`
+yahoo="w3m https://search.yahoo.co.jp/p="$query""
+while getopts N:P:M:T:R:S: option;
+do
+  case "$option" in
+    #ニュース
+    N)
+      yahoo="w3m https://news.yahoo.co.jp/search/?p="$query""
+      case "${OPTARG}" in
+      #主要
+      m)
+        yahoo="w3m http://news.yahoo.co.jp/";;
+      #国内
+      Dom)
+          yahoo="w3m http://news.yahoo.co.jp/hl?c=dom";;
+          #政治
+          Dom_pol)
+                  yahoo="w3m http://news.yahoo.co.jp/hl?c=pol";;
+          #社会
+          Dom_soci)
+                   yahoo="w3m http://news.yahoo.co.jp/hl?c=soci";;
+          #人
+          Dom_peo)
+                  yahoo="w3m http://news.yahoo.co.jp/hl?c=peo";;
+      #国際
+      Int)
+          yahoo="w3m http://news.yahoo.co.jp/hl?c=c_int";;
+          #国際総合
+          Int_all)
+                  yahoo="w3m http://news.yahoo.co.jp/hl?c=int";;
+          #中国・台湾
+          Int_cn)
+                 yahoo="w3m http://news.yahoo.co.jp/hl?c=cn";;
+          #韓国・北朝鮮
+          Int_kr)
+                 yahoo="w3m http://news.yahoo.co.jp/hl?c=kr";;
+          #アジア・オセアニア
+          Int_asia)
+                   yahoo="w3m http://news.yahoo.co.jp/hl?c=asia";;
+          #北米
+          Int_n_us)
+                   yahoo="w3m http://news.yahoo.co.jp/hl?c=n_ame";;
+          #中南米
+          Int_s_us)
+                   yahoo="w3m http://news.yahoo.co.jp/hl?c=s_ame";;
+          #ヨーロッパ
+          Int_eu)
+                 yahoo="w3m http://news.yahoo.co.jp/hl?c=eurp";;
+          #中東・アフリカ
+          Int_m_est)
+                    yahoo="w3m http://news.yahoo.co.jp/hl?c=m_est";;
+      #経済
+      b)
+        yahoo="w3m http://news.yahoo.co.jp/hl?c=bus";;
+        #経済総合
+        b_all)
+              yahoo="w3m http://news.yahoo.co.jp/hl?c=bus_all";;
+        #市況
+        b_cond)
+               yahoo="w3m http://news.yahoo.co.jp/hl?c=brf";;
+        #株式
+        b_sto)
+              yahoo="w3m http://news.yahoo.co.jp/hl?c=biz";;
+        #産業
+        b_ind)
+              yahoo="w3m http://news.yahoo.co.jp/hl?c=ind";;
+      #エンタメ
+      e)
+        yahoo="w3m http://news.yahoo.co.jp/hl?c=c_ent";;
+        #エンタメ総合
+        e_all)
+              yahoo="w3m http://news.yahoo.co.jp/hl?c=ent";;
+        #音楽
+        e_music)
+                yahoo="w3m http://news.yahoo.co.jp/hl?c=musi";;
+        #映画
+        e_mov)
+              yahoo="w3m http://news.yahoo.co.jp/hl?c=movi";;
+        #ゲーム
+        e_game)
+               yahoo="w3m http://news.yahoo.co.jp/hl?c=game";;
+        #アジア・韓流
+        e_asian)
+                yahoo="w3m http://news.yahoo.co.jp/hl?c=asent";;
+      #スポーツ
+      s)
+        yahoo="w3m http://news.yahoo.co.jp/hl?c=c_spo";;
+        #スポーツ総合
+        s_all)
+              yahoo="w3m http://news.yahoo.co.jp/hl?c=spo";;
+        #野球
+        s_base)
+               yahoo="w3m http://news.yahoo.co.jp/hl?c=base";;
+        #サッカー
+        s_soc)
+              yahoo="w3m http://news.yahoo.co.jp/hl?c=socc";;
+        #モータースポーツ
+        s_moto)
+               yahoo="w3m http://news.yahoo.co.jp/hl?c=moto";;
+        #競馬
+        s_horse)
+                yahoo="w3m http://news.yahoo.co.jp/hl?c=horse";;
+        #ゴルフ
+        s_golf)
+               yahoo="w3m http://news.yahoo.co.jp/hl?c=golf";;
+        #格闘技
+        s_fight)
+                yahoo="w3m http://news.yahoo.co.jp/hl?c=fight";;
+      #IT・科学
+      i)
+        yahoo="w3m http://news.yahoo.co.jp/hl?c=c_sci";;
+        #IT総合
+        i_all)
+              yahoo="w3m http://news.yahoo.co.jp/hl?c=sci";;
+        #科学
+        i_sci)
+              yahoo="w3m http://news.yahoo.co.jp/hl?c=sctch";;
+        #製品
+        i_prod)
+               yahoo="w3m http://news.yahoo.co.jp/hl?c=prod";;
+      #ライフ
+      l)
+        yahoo="w3m http://news.yahoo.co.jp/hl?c=c_life";;
+        #ライフ総合
+        l_all)
+              yahoo="w3m http://news.yahoo.co.jp/hl?c=life";;
+        #ヘルス
+        l_hlth)
+               yahoo="w3m http://news.yahoo.co.jp/hl?c=hlth";;
+        #環境
+        l_env)
+              yahoo="w3m http://news.yahoo.co.jp/hl?c=emv";;
+      #速報
+      f)
+        yahoo="w3m http://news.yahoo.co.jp/flash";;
+      #記事
+      a)
+        yahoo="w3m https://news.yahoo.co.jp/search/?p="$query"&st=n";;
+      #写真
+      p)
+        yahoo="w3m https://news.yahoo.co.jp/search/?p="$query"&st=p";;
+      #映像
+      v)
+        yahoo="w3m https://news.yahoo.co.jp/search/?p="$query"&st=v";;
+      #雑誌
+      m)
+        yahoo="w3m https://news.yahoo.co.jp/search/?p="$query"&st=z";;
+      #個人
+      P)
+        yahoo="w3m https://news.yahoo.co.jp/search/?p="$query"&st=b";;
+      esac;;
+
+    #画像検索
+    P)
+      yahoo="w3m https://search.yahoo.co.jp/image/search?p="$query""
+      case "${OPTARG}" in
+      #画像の大きさ
+      S)
+        yahoo="w3m https://search.yahoo.co.jp/image/search?p="$query"&dim=small";;
+      M)
+        yahoo="w3m https://search.yahoo.co.jp/image/search?p="$query"&dim=medium";;
+      L)
+        yahoo="w3m https://search.yahoo.co.jp/image/search?p="$query"&dim=large";;
+      W)
+        yahoo="w3m https://search.yahoo.co.jp/image/search?p="$query"&dim=wallpaper";;
+      WW)
+         yahoo="w3m https://search.yahoo.co.jp/image/search?p="$query"&dim=widewallpaper";;
+      #画像の色
+      C)
+        yahoo="w3m https://search.yahoo.co.jp/image/search?p="$query"&imt=color";;
+      G)
+        yahoo="w3m https://search.yahoo.co.jp/image/search?p="$query"&imt=gray";;
+      #画像の種類
+      f)
+        yahoo="w3m https://search.yahoo.co.jp/image/search?p="$query"&ctype=face";;
+      p)
+        yahoo="w3m https://search.yahoo.co.jp/image/search?p="$query"&ctype=photo";;
+      c)
+        yahoo="w3m https://search.yahoo.co.jp/image/search?p="$query"&ctype=clipart";;
+      l)
+        yahoo="w3m https://search.yahoo.co.jp/image/search?p="$query"&ctype=lineart";;
+      esac;;
+
+     #動画検索
+     M)
+       yahoo="w3m https://search.yahoo.co.jp/video/search?p="$query""
+       case "${OPTARG}" in
+       #再生時間
+       #4分未満
+       -4)
+          yahoo="w3m https://search.yahoo.co.jp/video/search?p="$query"&dr=0";;
+       #4分以上20分未満
+       4-20)
+            yahoo="w3m https://search.yahoo.co.jp/video/search?p="$query"&dr=1";;
+       #20分以上
+       20-)
+           yahoo="w3m https://search.yahoo.co.jp/video/search?p="$query"&dr=2";;
+       #投稿時間
+       #1時間以内
+       -1h)
+           yahoo="w3m https://search.yahoo.co.jp/video/search?p="$query"&pd=0";;
+       #24時間以内
+       -24h)
+            yahoo="w3m https://search.yahoo.co.jp/video/search?p="$query"&pd=1";;
+       #1週間以内
+       -1w)
+           yahoo="w3m https://search.yahoo.co.jp/video/search?p="$query"&pd=2";;
+       #1ヶ月以内
+       -1mo)
+            yahoo="w3m https://search.yahoo.co.jp/video/search?p="$query"&pd=3";;
+       #1年以内
+       -1y)
+           yahoo="w3m https://search.yahoo.co.jp/video/search?p="$query"&pd=4";;
+       #動画サイト
+       #youtube
+       you)
+           yahoo="w3m https://search.yahoo.co.jp/video/search?p="$query"&st=youtube";;
+       #dailymotion
+       daily)
+             yahoo="w3m https://search.yahoo.co.jp/video/search?p="$query"&st=dailymotion";;
+       #ニコニコ動画
+       nicoV)
+             yahoo="w3m https://search.yahoo.co.jp/video/search?p="$query"&st=niconico";;
+       #ニコニコ生放送
+       nicoL)
+             yahoo="w3m https://search.yahoo.co.jp/video/search?p="$query"&st=nicolive";;
+       #GYAO!
+       gyao)
+            yahoo="w3m https://search.yahoo.co.jp/video/search?p="$query"&st=yj";;
+       #TVer
+       tver)
+            yahoo="w3m https://search.yahoo.co.jp/video/search?p="$query"&st=tver";;
+       #NHK
+       nhk)
+           yahoo="w3m https://search.yahoo.co.jp/video/search?p="$query"&st=nhk";;
+       #フジテレビ
+       fuji)
+            yahoo="w3m https://search.yahoo.co.jp/video/search?p="$query"&st=fuji";;
+       #日本テレビ
+       ntv)
+           yahoo="w3m https://search.yahoo.co.jp/video/search?p="$query"&st=ntv";;
+       #テレビ朝日
+       tva)
+           yahoo="w3m https://search.yahoo.co.jp/video/search?p="$query"&st=tva";;
+       #TBS
+       tbs)
+           yahoo="w3m https://search.yahoo.co.jp/video/search?p="$query"&st=tbs";;
+       #テレビ東京
+       tvtky)
+             yahoo="w3m https://search.yahoo.co.jp/video/search?p="$query"&st=tvtky";;
+       esac;;
+
+     #知恵袋
+     T)
+       yahoo="w3m http://chiebukuro.search.yahoo.co.jp/search?p="$query""
+       case "${OPTARG}" in
+       #回答受付中
+       accepting)
+                 yahoo="w3m http://chiebukuro.search.yahoo.co.jp/search?p="$query"&class=1&flg=0";;
+       #解決済み
+       resolved)
+                yahoo="w3m http://chiebukuro.search.yahoo.co.jp/search?p="$query"&class=1&flg=1";;
+       #投票受付中
+       voting)
+              yahoo="w3m http://chiebukuro.search.yahoo.co.jp/search?p="$query"&class=1&flg=2";;
+       #知恵ノート
+       note)
+            yahoo="w3m http://chiebukuro.search.yahoo.co.jp/note_search?p="$query"&class=2";;
+       esac;;
+
+     #レシピ
+     R)
+       yahoo="w3m https://search.yahoo.co.jp/recipe/search?&p="$query""
+       case "${OPTARG}" in
+       #レシピ説明付き
+       list)
+            yahoo="w3m https://search.yahoo.co.jp/recipe/search?&p="$query"&view=list";;
+       #短時間レシピ
+       shot)
+            yahoo="w3m https://search.yahoo.co.jp/recipe/search?&p="$query"&view=grid&nrct=1&flvs=0&btqck=%E7%9F%AD%E6%99%82%E9%96%93%E3%83%AC%E3%82%B7%E3%83%94";;
+       #低カロリーレシピ
+       lowcal)
+              yahoo="w3m https://search.yahoo.co.jp/recipe/search?&p="$query"&view=grid&nrcal=1&flvs=0&btcal=%E4%BD%8E%E3%82%AB%E3%83%AD%E3%83%AA%E3%83%BC%E3%83%AC%E3%82%B7%E3%83%94";;
+       #クックパッドのみ
+       cockpad)
+               yahoo="w3m https://search.yahoo.co.jp/recipe/search?&p="$query"&view=grid&nrsite=1&flvs=0&btcpd=%E3%82%AF%E3%83%83%E3%82%AF%E3%83%91%E3%83%83%E3%83%89%E3%81%AE%E3%81%BF";;
+       #和風
+       jp)
+          yahoo="w3m https://search.yahoo.co.jp/recipe/search?&p="$query"&flvs=1";;
+       #中華風
+       cn)
+          yahoo="w3m https://search.yahoo.co.jp/recipe/search?&p="$query"&flvs=2";;
+       #韓国風
+       kr)
+          yahoo="w3m https://search.yahoo.co.jp/recipe/search?&p="$query"&flvs=3";;
+       #イタリアン
+       it)
+          yahoo="w3m https://search.yahoo.co.jp/recipe/search?&p="$query"&flvs=4";;
+       #エスニック
+       et)
+          yahoo="w3m https://search.yahoo.co.jp/recipe/search?&p="$query"&flvs=5";;
+       esac;;
+
+     #お店
+     S)
+       yahoo="w3m https://loco.yahoo.co.jp/search/?p="$query""
+       case "${OPTARG}" in
+       #クチコミが多い順
+       review)
+              yahoo="w3m https://loco.yahoo.co.jp/search/?p="$query"&sort=-review";;
+       #エリア
+       #北海道・東北
+       #北海道
+       hokkaido)
+                yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=01";;
+                #北海道札幌市
+                hokkaido-sapporo)
+                                 yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=101020000";;
+                                 #北海道札幌市大通
+                                 hokkaido-sapporo-odori)
+                                                        yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=101020200";;
+                                 #北海度札幌市桑園・円山・真駒内・定山渓
+                                 hokkaido-sapporo-soen)
+                                                       yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=101020600";;
+                                 #北海道札幌市札幌駅
+                                 hokkaido-sapporo-sapporosta.)
+                                                              yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=101020100";;
+                                 #北海道札幌市豊平・清田
+                                 hokkaido-sapporo-toyohira)
+                                                           yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=101020500";;
+                                 #北海道札幌市北区
+                                 hokkaido-sapporo-kita)
+                                                       yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=101020800";;
+                                 #北海道札幌市琴似・発寒・手稲
+                                 hokkaido-sapporo-kotoni)
+                                                         yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=101020700";;
+                                 #北海道札幌市白石・厚別
+                                 hokkaido-sapporo-shiroishi)
+                                                            yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=101020400";;
+                                 #北海道札幌市東区
+                                 hokkaido-sapporo-higashi)
+                                                          yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=101020900";;
+                #北海道函館市
+                hokkaido-hakodate)
+                                  yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=101100000";;
+                #すすきの・豊水すすきの
+                hokkaido-susukino)
+                                  yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=101010000";;
+                #北海道旭川市
+                hokkaido-asahikawa)
+                                   yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=101130000";;
+                #北海道帯広市・十勝
+                hokkaido-obihiro)
+                                 yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=101190000";;
+                                 #北海道帯広市
+                                 hokkaido-obihiro-obihiro)
+                                                          yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=101190100";;
+                #北海道室蘭市・苫小牧・登別・洞爺湖
+                hokkaido-muroran)
+                                 yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=101080000";;
+                                 #北海道苫小牧市
+                                 hokkaido-tomakomai)
+                                                    yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=101080200";;
+                                 #北海道室蘭
+                                 hokkaido-muroran-muroran)
+                                                          yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=101080100";;
+                                 #北海道洞爺湖
+                                 hokkaido-toyako)
+                                                 yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=101080400";;
+                #北海道千歳市・恵庭・北広島・支笏湖
+                hokkaido-chitose)
+                                 yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=101040000";;
+                                 #北海道千歳市
+                                 hokkaido-chitose)
+                                                  yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=101040100";;
+                                 #北海道恵庭市
+                                 hokkaido-eniwa)
+                                                yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=101040200";;
+                #北海道夕張市・岩見沢・滝川・深川
+                hokkaido-yubari)
+                                yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=101030000";;
+                                #北海道滝川市
+                                hokkaido-takikawa)
+                                                  yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=101030300";;
+                                #北海道夕張市
+                                hokkaido-yubari-yubari)
+                                                       yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=101030100";;
+                                #北海道岩見沢市
+                                hokkaido-iwamizawa)
+                                                   yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=101030200";;
+                #北海道釧路市・阿寒湖・摩周湖
+                hokkaido-kushiro)
+                                 yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=101200000";;
+                                 #北海道釧路市
+                                 hokkaido-kushiro-kushiro)
+                                                          yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=101200100";;
+                                 
+       #青森
+       aomori)
+              yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=02";;
+       #岩手
+       iwate)
+             yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=03";;
+       #宮城
+       miyagi)
+              yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=04";;
+       #秋田
+       akita)
+             yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=05";;
+       #山形
+       yamagata)
+                yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=06";;
+       #関東
+       #東京
+       tokyo)
+             yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=13";;
+       #神奈川
+       kanagawa)
+                yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=14";;
+       #埼玉
+       saitama)
+               yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=11";;
+       #千葉
+       chiba)
+             yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=12";;
+       #茨城
+       ibaraki)
+               yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=08";;
+       #群馬
+       gunma)
+             yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=10";;
+       #山梨
+       yamanashi)
+                 yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=19";;
+       #信越・北陸
+       #新潟
+       niigata)
+               yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=15";;
+       #長野
+       nagano)
+              yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=20";;
+       #富山
+       toyama)
+              yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=16";;
+       #石川
+       ishikawa)
+                yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=17";;
+       #福井
+       hukui)
+             yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=18";;
+       #東海
+       #愛知
+       aichi)
+             yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=23";;
+       #岐阜
+       gihu)
+            yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=21";;
+       #静岡
+       shizuoka)
+                yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=22";;
+       #三重
+       mie)
+           yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=24";;
+       #近畿
+       #大阪
+       osaka)
+             yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=27";;
+       #兵庫
+       hyogo)
+             yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=28";;
+       #京都
+       kyoto)
+             yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=26";;
+       #滋賀
+       shiga)
+             yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=25";;
+       #奈良
+       nara)
+            yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=29";;
+       #和歌山
+       wakayama)
+                yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=30";;
+       #中国・四国
+       #鳥取
+       tottori)
+               yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=31";;
+       #島根
+       shimane)
+               yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=32";;
+       #岡山
+       okayama)
+               yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=33";;
+       #広島
+       hiroshima)
+                 yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=34";;
+       #山口
+       yamaguchi)
+                 yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=35";;
+       #徳島
+       tokushima)
+                 yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=36";;
+       #香川
+       kagawa)
+              yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=37";;
+       #愛媛
+       ehime)
+             yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=38";;
+       #高知
+       kochi)
+             yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=39";;
+       #九州・沖縄
+       #福岡
+       hukuoka)
+               yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=40";;
+       #佐賀
+       saga)
+            yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=41";;
+       #長崎
+       nagasaki)
+                yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=42";;
+       #熊本
+       kumamoto)
+                yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=43";;
+       #大分
+       oita)
+            yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=44";;
+       #宮崎
+       miyazaki)
+                yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=45";;
+       #鹿児島
+       kagoshima)
+                 yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=46";;
+       #沖縄
+       okinawa)
+               yahoo="w3m https://loco.yahoo.co.jp/search/?property="$query"&areacd=47";;
+     esac;;
+  esac
+done
+$yahoo

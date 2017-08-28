@@ -1,0 +1,18 @@
+#!/bin/bash
+
+name=`whoami`
+
+hour=`date +%H%M`
+
+if [ "$hour" -ge 500 -a "$hour" -lt 1059 ]
+then
+greeting -Mr $name
+elif [ "$hour" -ge 1100 -a "$hour" -lt 1459 ]
+then
+greeting -Ar $name
+elif [ "$hour" -ge 1500 -a "$hour" -lt 1959 ]
+then
+greeting -Er $name
+else
+greeting -Nr $name
+fi

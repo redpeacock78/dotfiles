@@ -1,0 +1,12 @@
+#! /bin/bash
+
+cd ~/ピクチャ/scan
+mkdir -p ~/ピクチャ/scan/png
+mkdir -p ~/ピクチャ/scan/pdf
+
+for file in *.pdf; do
+filename=( `echo $file | tr -s '.' ' '` )
+convert -density 882 $file ${filename[0]}.png 
+mv ${filename[0]}.png  ~/ピクチャ/scan/png/
+mv $file ~/ピクチャ/scan/pdf/
+done
