@@ -4,7 +4,7 @@
  set -u
 
  setup() {
-     dotfiles=$HOME/.dotfiles
+     dotfiles=$HOME/dotfiles
 
      has() {
          type "$1" > /dev/null 2>&1
@@ -17,7 +17,7 @@
      if [ -d "$dotfiles" ]; then
          (cd "$dotfiles" && git pull --rebase)
      else
-         git clone https://github.com/redpeacock78/.dotfiles "$dotfiles"
+         git clone https://github.com/redpeacock78/dotfiles "$dotfiles"
      fi
 
      has git && symlink "$dotfiles/bin/" "$HOME/bin"
