@@ -1,0 +1,26 @@
+#! /bin/bash
+
+time-greeting 0000
+time-greeting 100
+time-greeting 200
+time-greeting 300
+time-greeting 400
+time-greeting 500
+time-greeting 600
+time-greeting 700
+time-greeting 800
+time-greeting 900
+time-greeting 1000
+time-greeting 1100
+time-greeting 1200
+time-greeting 1300
+time-greeting 1400
+time-greeting 1500
+time-greeting 1600
+time-greeting 1700
+time-greeting 1800
+time-greeting 1900
+time-greeting 2000
+time-greeting 2100
+time-greeting 2200
+time-greeting 2300

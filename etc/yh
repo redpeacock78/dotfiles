@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# 引数解析
+COMMAND=`basename $0`
+
+while getopts pns: OPTION
+do
+  case $OPTION in
+    p) OPTION_p="TRUE" ;;
+    n) OPTION_n="TRUE" ;;
+    -small|s) OPTION_s="TRUE" ; VALUE_s="&dim=small" ;;
+    \?|h|help) echo "Usage: $COMMAND [-p | -n] [-s suffix] name ..." 1>&2
+               exit 1 ;;
+  esac
+done
+
+shift $(($OPTIND - 1)) #残りの非オプションな引数のみが、$@に設定される
+
+# オプション処理
+if [ "$OPTION_p" = "TRUE" ]; then
+  SENTENCE='image.'
+fi
+
+if [ "$OPTION_n" = "TRUE" ]; then
+  SENTENCE='news.'
+fi
+
+if [ "$OPTION_s" = "TRUE" ]; then
+  SUFFIX=$VALUE_s
+fi
+
+# 出力処理
+for arg in "$@"
+do
+  w3m https://"${SENTENCE}"search.yahoo.co.jp/search?p="$arg${SUFFIX}"
+done
+exit 0

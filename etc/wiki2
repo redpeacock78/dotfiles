@@ -1,0 +1,76 @@
+#! /bin/bash
+
+for arg in $@; do
+  if [ "$arg" = "$1" ]; then
+    QUERY=${QUERY}${arg}
+  else
+    QUERY=${QUERY}+${arg}
+  fi
+done
+query=`echo ${QUERY} | sed -e "s/-[^ ]/ /" | tr + ' ' | nkf -wMQ | tr = %`
+wiki2="w3m https://ja.wikipedia.org/wiki/"$query""
+while getopts CmWbqSsnvdacwAyuh option
+do
+ case $option in
+    C)
+      wiki2="w3m https://commons.wikimedia.org/wiki/"$query"?uselang=ja";;
+    m)
+      wiki2="w3m https://meta.wikimedia.org/wiki/"$query"";;
+    W)
+      wiki2="w3m https://ja.wiktionary.org/wiki/"$query"";;
+    b)
+      wiki2="w3m https://ja.wikibooks.org/wiki/"$query"";;
+    q)
+      wiki2="w3m https://ja.wikiquote.org/wiki/"$query"";;
+    S)
+      wiki2="w3m https://ja.wikisource.org/wiki/"$query"";;
+    s)
+      wiki2="w3m https://species.wikimedia.org/wiki/"$query"";;
+    n)
+      wiki2="w3m https://ja.wikinews.org/wiki/"$query"";;
+    v)
+      wiki2="w3m https://ja.wikiversity.org/wiki/"$query"";;
+    d)
+      wiki2="w3m https://www.wikidata.org/wiki/"$query"";;
+    a)
+      wiki2="w3m http://ansaikuropedia.org/wiki/"$query"";;
+    c)
+      wiki2="w3m https://wiki.chakuriki.net/index.php/";;
+    w)
+      wiki2="w3m http://ja.starwars.wikia.com/wiki/"$query"";;
+    u)
+      wiki2="w3m https://wiki.ubuntulinux.jp/";;
+    A)
+      wiki2="w3m http://ja.anime.wikia.com/wiki/"$query"";;
+    y)
+      wiki2="w3m http://yaruo.wikia.com/wiki/"$query"";;
+    h)
+      echo "wiki2コマンドで使えるオプションについては以下の通りです。
+
+オプション指定無し - ウィキペディアを表示します。
+[-C] - ウィキペディア・コモンズを表示します。
+[-m] - メタウィキを表示します。
+[-W] - ウィクショナリーを表示します。
+[-b] - ウィキブックスを表示します。
+[-q] - ウィキクォートを表示します。
+[-S] - ウィキソースを表示します。
+[-s] - ウィキスピーシーズを表示します。
+[-n] - ウィキニュースを表示します。
+[-v] - ウィキバーシティを表示します。
+[-d] - ウィキデータを表示します。
+[-a] - アンサイクロペディアを表示します。
+[-c] - chakuwik2を表示します。
+[-w] - Wookieepediaを表示します。
+[-A] - Anipediaを表示します。
+[-y] - やる夫 wikiを表示します。
+[-u] - Ubuntu Japanese wikiを表示します。
+[-h] - ヘルプを表示します。
+
+また、検索したい言葉を、"wiki2 [オプション] [検索したい言葉1] [検索したい言葉2] ..."のようにするとオプションに対応したページでの検索結果が閲覧できます。"
+      exit 1;;
+    \?)
+      echo "Usage: wiki2 [-m] [-C] [-W] [-b] [-q] [-S] [-s] [-n] [-v] [-d] [-u] [-c] [-w] [-A] [-y] [-h]"
+      exit 1;;
+   esac
+done
+$wiki2

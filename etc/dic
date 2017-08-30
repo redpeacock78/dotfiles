@@ -1,0 +1,42 @@
+#! /bin/bash
+
+for arg in $@; do
+  if [ "$arg" = "$1" ]; then
+    QUERY=${QUERY}${arg}
+  else
+    QUERY=${QUERY}+${arg}
+  fi
+done
+
+query=`echo ${QUERY} | tr + ' ' | nkf -wMQ | tr = % | sed "s/^%2D....//" | sed "s/^.%20//"| sed "s/^..%20//" | sed "s/^%2D.....//" | sed "s/^%20//" | sed "s/^.%20//" | sed "s/^20//" | sed "s/^0//"`
+dic="w3m http://www.sanseido.net/User/Dic/Index.aspx?TWords="$query"&st=1&DORDER=&DailyJJ=checkbox"
+while getopts "ej:" option
+do
+  case $option in
+      e)
+        case "${OPTARG}" in
+            fr)
+              dic="w3m http://www.sanseido.net/User/Dic/Index.aspx?TWords="$query"&st=0&DORDER=&DailyEJ=checkbox";;
+            b)
+              dic="w3m http://www.sanseido.net/User/Dic/Index.aspx?TWords="$query"&st=2&DORDER=&DailyEJ=checkbox";;
+            p)
+              dic="w3m http://www.sanseido.net/User/Dic/Index.aspx?TWords="$query"&st=5&DORDER=&DailyEJ=checkbox";;
+            P)
+              dic="w3m http://www.sanseido.net/User/Dic/Index.aspx?TWords="$query"&st=1&DORDER=&DailyEJ=checkbox";;
+        esac;;
+      j)
+        case "${OPTRAG}" in
+            :)
+              dic="w3m http://www.sanseido.net/User/Dic/Index.aspx?TWords="$query"&st=3&DORDER=&DailyJE=checkbox";;
+            f)
+              dic="w3m http://www.sanseido.net/User/Dic/Index.aspx?TWords="$query"&st=0&DORDER=&DailyJE=checkbox";;
+            b)
+              dic="w3m http://www.sanseido.net/User/Dic/Index.aspx?TWords="$query"&st=2&DORDER=&DailyJE=checkbox";;
+            p)
+              dic="w3m http://www.sanseido.net/User/Dic/Index.aspx?TWords="$query"&st=5&DORDER=&DailyJE=checkbox";;
+            P)
+              dic="w3m http://www.sanseido.net/User/Dic/Index.aspx?TWords="$query"&st=1&DORDER=&DailyJE=checkbox";;
+        esac;;
+  esac
+done
+$dic

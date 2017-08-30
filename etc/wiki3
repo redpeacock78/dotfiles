@@ -1,0 +1,13 @@
+#! /bin/bash
+function wiki3() {
+     QUERY=''
+      for arg in $@; do
+          if [ "$arg" = "$1" ]; then
+              QUERY=${QUERY}${arg}
+          else
+              QUERY=${QUERY}+${arg}
+          fi
+      done
+w3m https://ja.wikipedia.org/wiki/${QUERY}
+}
+w3m $wiki3

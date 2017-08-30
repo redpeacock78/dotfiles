@@ -1,0 +1,3 @@
+# /bin/bash
+wikiwiki="pybr https://ja.wikipedia.org/"
+$wikiwiki

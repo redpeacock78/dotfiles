@@ -1,0 +1,37 @@
+#! /bin/bash
+
+for arg in $@; do
+          if [ "$arg" = "$1" ]; then
+              QUERY=${QUERY}${arg}
+          else
+              QUERY=${QUERY}+${arg}
+          fi
+      done
+query=`echo ${QUERY} | sed -e "s/-[^ ]//" | tr + ' ' > ~/txt`
+txt=`cat ~/txt`
+yahoo="w3m https://search.yahoo.co.jp/search?p="$query""
+version="echo "ver.0.0.1""
+while getopts :pnvh-: option;
+do 
+case $option in
+    -)
+      case "${OPTARG}" in
+          small)
+                small="&dim=small"
+                exit 1;;
+      esac;;
+    p)
+      yahoo="firefox https://image.search.yahoo.co.jp/"$txt"";;
+    n)
+      yahoo="firefox https://news.search.yahoo.co.jp/search?p="$txt"";;
+    v|version)
+              $version;
+              shift;
+              exit 1;;
+    \?|h|help)
+      echo "Usage: yahoo1 [-n] [-p] [-v|version] [-h|help]";
+      shift;
+      exit 1;;
+esac
+done
+$yahoo

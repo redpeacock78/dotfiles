@@ -1,0 +1,105 @@
+#! /bin/bash
+
+name=`whoami`
+
+greeting $name
+greeting -M $name
+greeting -A $name
+greeting -E $name
+greeting -N $name
+greeting -H $name
+greeting -D $name
+
+greeting -r $name
+greeting -Mr $name
+greeting -Ar $name
+greeting -Er $name
+greeting -Nr $name
+greeting -Hr $name
+greeting -Dr $name
+
+greeting -s $name
+greeting -Ms $name
+greeting -As $name
+greeting -Es $name
+greeting -Ns $name
+greeting -Hs $name
+greeting -Ds $name
+
+greeting -m $name
+greeting -Mm $name
+greeting -Am $name
+greeting -Em $name
+greeting -Nm $name
+greeting -Hm $name
+greeting -Dm $name
+
+greeting -i $name
+greeting -Mi $name
+greeting -Ai $name
+greeting -Ei $name
+greeting -Ni $name
+greeting -Hi $name
+greeting -Di $name
+
+greeting -e $name
+greeting -Me $name
+greeting -Ae $name
+greeting -Ee $name
+greeting -Ne $name
+greeting -He $name
+greeting -De $name
+
+greeting $name
+greeting -r $name
+greeting -s $name
+greeting -m $name
+greeting -i $name
+greeting -e $name
+
+greeting -M $name
+greeting -rM $name
+greeting -sM $name
+greeting -mM $name
+greeting -iM $name
+greeting -eM $name
+
+greeting -A $name
+greeting -rA $name
+greeting -sA $name
+greeting -mA $name
+greeting -iA $name
+greeting -eA $name
+
+greeting -E $name
+greeting -rE $name
+greeting -sE $name
+greeting -mE $name
+greeting -iE $name
+greeting -eE $name
+
+greeting -N $name
+greeting -rN $name
+greeting -sN $name
+greeting -mN $name
+greeting -iN $name
+greeting -eN $name
+
+greeting -H $name
+greeting -rH $name
+greeting -sH $name
+greeting -mH $name
+greeting -iH $name
+greeting -eH $name
+
+greeting -D $name
+greeting -rD $name
+greeting -sD $name
+greeting -mD $name
+greeting -iD $name
+greeting -eD $name
+
+greeting -help
+greeting -help_ja
+greeting -help_en
+greeting -?

@@ -1,0 +1,4 @@
+#! /bin/bash
+mkdir ~/wikiwiki
+touch ~/wikiwiki/queri.txt
+echo $1 | nkf -wMQ | tr = % > ~/wikiwiki/queri.txt

@@ -1,0 +1,7 @@
+#! /bin/bash
+
+query=`echo $@ | nkf -wMQ | tr = %`
+
+wget -qO - http://wikipedia.simpleapi.net/api?keyword=$query | grep -oe "<title[^>]*>[^<]*</title>" -oe "<body[^>]*>[^<]*</body>" |sed -e "s/<title>\(.*\)<\/title>/\1/" -e "s/<body>\(.*\)<\/body>/\1/" -e "s/&....;//" -e "s/&....;//"
+
+
