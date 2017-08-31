@@ -1,12 +1,12 @@
 ###zsh-plugin###
 fpath=(/usr/local/share/zsh-completions $fpath)
 ##zsh-history-substring-search##
-if [ -f /Users/redpeacock78/.zsh/zsh-history-substring-search/zsh-history-substring-search.zsh ]; then
-  source /Users/redpeacock78/.zsh/zsh-history-substring-search/zsh-history-substring-search.zsh
+if [ -f $HOME/.zsh/zsh-history-substring-search/zsh-history-substring-search.zsh ]; then
+  source $HOME/.zsh/zsh-history-substring-search/zsh-history-substring-search.zsh
 fi
 ##fzf##
-if [ -f /Users/redpeacock78/.fzf.zsh ]; then
-  source /Users/redpeacock78/.fzf.zsh
+if [ -f $HOME/.fzf.zsh ]; then
+  source $HOME/.fzf.zsh
 fi
 ##peco##
 function peco-select-history() {                           
@@ -17,8 +17,8 @@ function peco-select-history() {
 zle -N peco-select-history                                 
 bindkey '^r' peco-select-history
 ##incr##
-if [ -f /Users/redpeacock78/.zsh/incr*.zsh ]; then
-  source /Users/redpeacock78/.zsh/incr*.zsh
+if [ -f $HOME/.zsh/incr*.zsh ]; then
+  source $HOME/.zsh/incr*.zsh
 fi
 
 ###補完機能###
@@ -28,13 +28,13 @@ compinit -u
 
 ###zsh-plugin(syntax)###
 ##zsh-syntax-highlighting##
-if [ -f /Users/redpeacock78/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
-  source /Users/redpeacock78/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+if [ -f $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+  source $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
 ##zsh-url-highlighter##
-if [ -f /Users/redpeacock78/.zsh/zsh-url-highlighter/url/url-highlighter.zsh ]; then
-  source /Users/redpeacock78/.zsh/zsh-url-highlighter/url/url-highlighter.zsh
+if [ -f $HOME/.zsh/zsh-url-highlighter/url/url-highlighter.zsh ]; then
+  source $HOME/.zsh/zsh-url-highlighter/url/url-highlighter.zsh
 fi
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern url)
 ZSH_HIGHLIGHT_STYLES[url-good]='fg=blue,bold'
