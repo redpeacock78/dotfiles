@@ -114,7 +114,7 @@ export PATH="/Users/redpeacock78/bin:$PATH"
 [ -r /home/redpeacock978/.byobu/prompt ] && . /home/redpeacock978/.byobu/prompt
 
 ###プロンプト表示設定###
-PROMPT="%B%(?.%(!.${PURPLE}.${GREEN}).${RED})%n"@"%m${DEFAULT}:${BLUE}%~${DEFAULT}%(!.#.$)%b " #メインプロンプト(通常時は緑、root時は紫、コマンドがエラーだった場合次に表示されるプロンプトは赤)
+PROMPT="%B%(?.%(!.${PURPLE}.${GREEN}).${RED})%n"@"%m${DEFAULT}:${BLUE}%~${DEFAULT}%b" #メインプロンプト(通常時は緑、root時は紫、コマンドがエラーだった場合次に表示されるプロンプトは赤)
 PROMPT2="%B%(?.%(!.${PURPLE}.${GREEN}).${RED})%n"@"%m${DEFAULT}:${BLUE}%~${DEFAULT}%(!.#.$)%b${BLUE2}%_> ${DEFAULT}" #セカンダリプロンプト
 SPROMPT="%B%U${YELLOW}Correct${DEFAULT}%u: ${RED}%R${DEFAULT} 👉 ${BLUE}%r${DEFAULT} ?%b [No/Yes/About/Edit] " #コマンド訂正表示
 RPROMPT="[%D{%Y/%m/%d %H:%M:%S}]" #右プロンプト時刻表示
@@ -131,9 +131,33 @@ zstyle ':vcs_info:git:*' check-for-changes true
 zstyle ':vcs_info:git:*' stagedstr "%F{yellow}[!]"
 zstyle ':vcs_info:git:*' unstagedstr "%F{red}[+]"
 zstyle ':vcs_info:*' formats "%F{green}[${CHECK} ]%c%u%f"
-zstyle ':vcs_info:*' actionformats '[%b|%a]'
+zstyle ':vcs_info:*' actionformats '[%b|%a]%c%u'
 precmd () { vcs_info }
-PROMPT=$PROMPT'${vcs_info_msg_0_}'
+
+#vsc_info更新時に自動更新#
+function _update_vcs_info_msg() {
+    psvar=()
+    LANG=en_US.UTF-8 vcs_info
+    [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
+    psvar[2]=$(_git_not_pushed)
+  }
+  function _git_not_pushed() {
+    if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]; then
+      head="$(git rev-parse HEAD)"
+      for x in $(git rev-parse --remotes)
+      do
+        if [ "$head" = "$x" ]; then
+          return 0
+        fi
+      done
+      echo "?"
+    fi
+    return 0
+  }
+  add-zsh-hook precmd _update_vcs_info_msg
+
+#PROMPT(git)表示#
+PROMPT=$PROMPT'${vcs_info_msg_0_}%(!.#.$) '
 
 ###コマンド履歴###
 HISTFILE=~/.zsh_history
