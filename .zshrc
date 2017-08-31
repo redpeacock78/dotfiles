@@ -126,11 +126,11 @@ TMOUT=01
 autoload -Uz vcs_info
 ###git(vcs_info)関連###
 setopt prompt_subst
-CHECK=$'\U2714'
+CHECK=$'\U2714 '
 zstyle ':vcs_info:git:*' check-for-changes true
 zstyle ':vcs_info:git:*' stagedstr "[%F{yellow}!%f]"
 zstyle ':vcs_info:git:*' unstagedstr "[%F{red}＋%f]"
-zstyle ':vcs_info:*' formats "[%F{green}${CHECK} %f]%c%u%f"
+zstyle ':vcs_info:*' formats "[%F{green}${CHECK}%f]%c%u%f"
 zstyle ':vcs_info:*' actionformats '[%b|%a]%c%u'
 precmd () { vcs_info }
 
