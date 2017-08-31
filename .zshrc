@@ -25,6 +25,7 @@ fi
 autoload -Uz compinit;
 compinit -u
 
+
 ###zsh-plugin(syntax)###
 ##zsh-syntax-highlighting##
 if [ -f /Users/redpeacock78/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
@@ -120,6 +121,18 @@ RPROMPT="[%D{%Y/%m/%d %H:%M:%S}]" #右プロンプト時刻表示
 #右プロンプト時刻自動更新
 TRAPALRM () { zle reset-prompt }
 TMOUT=01
+
+##vcs_info機能呼び出し##
+autoload -Uz vcs_info
+###git(vcs_info)関連###
+setopt prompt_subst
+zstyle ':vcs_info:git:*' check-for-changes true
+zstyle ':vcs_info:git:*' stagedstr "[%F{yellow}!]"
+zstyle ':vcs_info:git:*' unstagedstr "[%F{red}+]"
+zstyle ':vcs_info:*' formats "%F{green}%c%u[%b]%f"
+zstyle ':vcs_info:*' actionformats '[%b|%a]'
+precmd () { vcs_info }
+RPROMPT=$RPROMPT'${vcs_info_msg_0_}'
 
 ###コマンド履歴###
 HISTFILE=~/.zsh_history
@@ -325,7 +338,7 @@ chmod a+x $P && shift && ./$P $@
 done}'
 ##コンパイラ言語##
 #C言語、C++をファイル指定でコンパイル及び実行#
-alias -s {c,cc,cp,cpp,cxx}='(){ g++ $1 && shift && ./a.out $@ }'
+alias -s {c,cc,cp,cpp,cxx}='(){ gcc -o ${1%.*} $1 && shift && ./${1%.*} $@ }'
 #C#をコンパイル及び実行#
 alias -s cs='(){ for C in *.cs; do
 mcs $C && shift && ./${C/.cs/.exe} $@ 
@@ -368,6 +381,9 @@ alias -s exe='(){wine env XMODIFIERS="@im=fcitx" $1}'
 ###独自コマンド###
 alias wi="wiki"
 alias wa="wiki -a"
+
+###lsh###
+alias lsh="/Users/redpeacock78/lsh/src/lsh"
 
 ###お遊び###
 ##水族館##
