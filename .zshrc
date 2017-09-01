@@ -339,6 +339,7 @@ alias gitreb="git rebase" #ブランチの派生元を変更する
 ##ほかのリポジトリとの連携##
 alias gitpl="git pull" #ほかのリポジトリの変更点をローカルリポジトリにマージする
 alias gitps="git push" #公開リポジトリに自分のリポジトリの内容を送信する
+alias githst='git log --graph --date=short --pretty=format:"%Cgreen%h %cd %Cblue%cn %Creset%s"'
 
 ###拡張子判別・実行###
 ##スクリプト言語##
