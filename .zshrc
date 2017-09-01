@@ -96,10 +96,10 @@ export PATH="/usr/bin/ruby:$PATH"
 ###C#(mono)-PATH###
 export PATH="/opt/mono/bin:$PATH"
 ###GO-PATH##
-export GOPATH="/home/redpeacock978/go"
-export PATH="/home/redpeacock978/go/bin:/usr/local/go/bin:$PATH"
+export GOPATH="$HOME/go"
+export PATH="$HOME/go/bin:/usr/local/go/bin:$PATH"
 ##ShellScript-PATH##
-export PATH="/home/redpeacock978/bin:$PATH"
+export PATH="$HOME/bin:$PATH"
 ###etc-PATH###
 export PATH="/usr/games/:$PATH"
 ###coreutils###
@@ -108,7 +108,14 @@ export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 ###fink##
 source /sw/bin/init.sh
 ###独自コマンド###
-export PATH="/Users/redpeacock78/bin:$PATH"
+export PATH="$HOME/bin:$PATH"
+
+##Ricty(powerline)関連##
+export PATH="/usr/local/opt/sqlite/bin:$PATH"
+export PATH="/usr/local/opt/openssl/bin:$PATH"
+export PATH="/usr/local/opt/python/libexec/bin:$PATH"
+export PATH="/usr/local/opt/icu4c/bin:$PATH"
+export PATH="/usr/local/opt/icu4c/sbin:$PATH"
 
 ###byobu-prompt###
 [ -r /home/redpeacock978/.byobu/prompt ] && . /home/redpeacock978/.byobu/prompt
