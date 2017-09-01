@@ -158,7 +158,7 @@ function _update_vcs_info_msg() {
 
 #PROMPT(git)表示#
 PROMPT=$PROMPT'${vcs_info_msg_0_}%(!.#.$) '
-PROMMT2=$PROMPT2'${vcs_info_msg_0_}%(!.#.$)%b${BLUE2}%_> ${DEFAULT}'
+PROMPT2=$PROMPT2'${vcs_info_msg_0_}%(!.#.$)%b${BLUE2}%_> ${DEFAULT}'
 
 ###コマンド履歴###
 HISTFILE=~/.zsh_history
