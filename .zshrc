@@ -115,7 +115,7 @@ export PATH="/Users/redpeacock78/bin:$PATH"
 
 ###プロンプト表示設定###
 PROMPT="%B%(?.%(!.${PURPLE}.${GREEN}).${RED})%n"@"%m${DEFAULT}:${BLUE}%~${DEFAULT}%b" #メインプロンプト(通常時は緑、root時は紫、コマンドがエラーだった場合次に表示されるプロンプトは赤)
-PROMPT2="%B%(?.%(!.${PURPLE}.${GREEN}).${RED})%n"@"%m${DEFAULT}:${BLUE}%~${DEFAULT}%(!.#.$)%b${BLUE2}%_> ${DEFAULT}" #セカンダリプロンプト
+PROMPT2="%B%(?.%(!.${PURPLE}.${GREEN}).${RED})%n"@"%m${DEFAULT}:${BLUE}%~${DEFAULT}" #セカンダリプロンプト
 SPROMPT="%B%U${YELLOW}Correct${DEFAULT}%u: ${RED}%R${DEFAULT} 👉 ${BLUE}%r${DEFAULT} ?%b [No/Yes/About/Edit] " #コマンド訂正表示
 RPROMPT="[%D{%Y/%m/%d %H:%M:%S}]" #右プロンプト時刻表示
 #右プロンプト時刻自動更新
@@ -158,6 +158,7 @@ function _update_vcs_info_msg() {
 
 #PROMPT(git)表示#
 PROMPT=$PROMPT'${vcs_info_msg_0_}%(!.#.$) '
+PROMMT2=$PROMPT2'${vcs_info_msg_0_}%(!.#.$)%b${BLUE2}%_> ${DEFAULT}'
 
 ###コマンド履歴###
 HISTFILE=~/.zsh_history
