@@ -249,8 +249,7 @@ alias acdls='(){ cd $1 && als }'
 alias awk="gawk"
 alias ul='(){ unbuffer "$@" |& less -iSRM }'
 alias ucl='(){ unbuffer ccat --bg=dark “$@“ |& less -iSRM }'
-alias mount="mount-usb iTunes mount"
-alias unmount="mount-usb iTunes unmount"
+
 ##デバイスアドレス差分抽出##
 alias devad="ls -l /dev/ > /tmp/before.txt && ls -l /dev/ > /tmp/after.txt && diff /tmp/before.txt /tmp/after.txt"
 
