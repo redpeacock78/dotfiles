@@ -132,7 +132,6 @@ zstyle ':vcs_info:*' max-exports
 zstyle ':vcs_info:git:*' stagedstr "%F{yellow}！%f"
 zstyle ':vcs_info:git:*' unstagedstr "%F{red}＋%f"
 zstyle ':vcs_info:git:*' formats "[%F{green}${CHECK}%f%c%u%f]" " %F${BLUE}%b${brunch}${git}%f"
-zstyle ':vcs_info:hg:*' formats "(%F{green}${CHECK}%f%c%u%f)" " %F${BLUE}%b%f"
 zstyle ':vcs_info:git:*' actionformats "[%b|%a]%c%u" "[%b|%a]"
 
 precmd () { vcs_info }
