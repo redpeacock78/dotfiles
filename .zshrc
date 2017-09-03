@@ -131,8 +131,8 @@ zstyle ':vcs_info:git:*' check-for-changes true
 zstyle ':vcs_info:*' max-exports 3
 zstyle ':vcs_info:git:*' stagedstr "%F{yellow}！%f"
 zstyle ':vcs_info:git:*' unstagedstr "%F{red}＋%f"
-zstyle ':vcs_info:git:*' formats "[%F{green}${CHECK}%f%c%u%f]" " %F${BLUE}%b${brunch}${git}%f"
-zstyle ':vcs_info:git:*' actionformats "[%b|%a]%c%u" "[%b|%a]"
+zstyle ':vcs_info:*' formats "[%F{green}${CHECK}%f%c%u%f]" " %F${BLUE}%b${brunch}${git}%f"
+zstyle ':vcs_info:*' actionformats "[%b|%a]%c%u" "[%b|%a]"
 precmd () { vcs_info }
 
 #vsc_info更新時に自動更新#
