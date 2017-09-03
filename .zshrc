@@ -130,7 +130,7 @@ zstyle ':vcs_info:git:*' check-for-changes true
 zstyle ':vcs_info:*' max-exports 3
 zstyle ':vcs_info:git:*' stagedstr "[%F{yellow}！%f]"
 zstyle ':vcs_info:git:*' unstagedstr "[%F{red}＋%f]"
-zstyle ':vcs_info:*' formats "[%F{blue}%r%f][%F{green}${CHECK}%f]%c%u%f" "[%F{blue}%b${brunch}%f]"
+zstyle ':vcs_info:*' formats "[%F{green}${CHECK}%f]%c%u%f" "[%F{blue}%b${brunch}%f]"
 zstyle ':vcs_info:*' actionformats "[%b|%a]%c%u" "[%b|%a]"
 precmd () { vcs_info }
 
@@ -157,10 +157,8 @@ function _update_vcs_info_msg() {
   add-zsh-hook precmd _update_vcs_info_msg
 
 ###プロンプト表示設定###
-PROMPT="%B%(?.%(!.${PURPLE}.${GREEN}).${RED})%n"@"%m${DEFAULT}:${BLUE}
-%~${DEFAULT}%b" #メインプロンプト(通常時は緑、root時は紫、コマンドがエラーだった場合次に表示されるプロンプトは赤)
-PROMPT2="%B%(?.%(!.${PURPLE}.${GREEN}).${RED})%n"@"%m${DEFAULT}:${BLUE}
-%~${DEFAULT}" #セカンダリプロンプト
+PROMPT="%B%(?.%(!.${PURPLE}.${GREEN}).${RED})%n"@"%m${DEFAULT}:${BLUE}%~${DEFAULT}%b" #メインプロンプト(通常時は緑、root時は紫、コマンドがエラーだった場合次に表示されるプロンプトは赤)
+PROMPT2="%B%(?.%(!.${PURPLE}.${GREEN}).${RED})%n"@"%m${DEFAULT}:${BLUE}%~${DEFAULT}" #セカンダリプロンプト
 SPROMPT="%B%U${YELLOW}Correct${DEFAULT}%u: ${RED}%R${DEFAULT} 👉 ${BLUE}%r${DEFAULT} ?%b [No/Yes/About/Edit] " #コマンド訂正表示
 RPROMPT='[%D{%Y/%m/%d %H:%M:%S}]${vcs_info_msg_1_}' #右プロンプト時刻表示
 #右プロンプト時刻自動更新
@@ -170,6 +168,9 @@ TMOUT=01
 #PROMPT(git)表示#
 PROMPT=$PROMPT'${vcs_info_msg_0_}%(!.#.$) '
 PROMPT2=$PROMPT2'${vcs_info_msg_0_}%(!.#.$)%b${BLUE2}%_> ${DEFAULT}'
+precmd(){
+  printf "%${COLUMNS}s\n" "${vcs_info_msg_1_}"
+}
 
 ###コマンド履歴###
 HISTFILE=~/.zsh_history
