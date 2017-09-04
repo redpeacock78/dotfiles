@@ -6,7 +6,7 @@ TMP=`mktemp`
 TMP2=`mktemp`
 
 #変数指定(基本2)
-lz=`echo $@ | sed "s/^[-]*[a-z=]*[ ]$//"`
+lz=`echo $@ | sed -e "s/^-*[a-z=-]*[ ]//"`
 
 ###ここから###
 
@@ -44,25 +44,65 @@ ls -dF .* | grep -E '@$' > $TMP && column $TMP
 
 #ファイルのみ表示
 elif [[ $1 == '-f' ]]; then
-ls -F $lz | grep -v / > $TMP && column $TMP
+	ls -F $lz | grep -v / | grep -v '*$' > $TMP && column $TMP >/dev/null 2>&1
+	if [ $? = 0 ]; then
+	  ls -F $lz | grep -v / | grep -v '*$' > $TMP && column $TMP
+	else
+	  echo 'File is not found!'
+	fi
 elif [[ $1 == '--file' ]]; then
-ls -F $lz | grep -v / > $TMP && column $TMP
+	ls -F $lz | grep -v / | grep -v '*$' > $TMP && column $TMP >/dev/null 2>&1
+if [ $? = 0 ]; then
+	  ls -F $lz | grep -v / | grep -v '*$' > $TMP && column $TMP
+	else
+	  echo 'File is not found!'
+	fi
 
 #実行ファイルのみ表示
 elif [[ $1 == '-x' ]]; then
-ls -F $lz | grep -v / | grep '*$' > $TMP && column $TMP
-elif [[ $1 == '-extention' ]]; then
-ls -F | grep -v / | grep '*$' > $TMP && column $TMP
+	ls -F $lz | grep -v / | grep '*$' > $TMP && column $TMP >/dev/null 2>&1
+	if [ $? = 0 ]; then
+	  ls -F $lz | grep -v / | grep '*$' > $TMP && column $TMP
+	else
+	  echo 'File is not found!'
+	fi
+elif [[ $1 == '--executable' ]]; then
+	ls -F $lz | grep -v / | grep '*$' > $TMP && column $TMP >/dev/null 2>&1
+	if [ $? = 0 ]; then
+	  ls -F $lz | grep -v / | grep '*$' > $TMP && column $TMP
+	else
+	  echo 'File is not found!'
+	fi
 
 #ファイル(隠しのみ)表示
 elif [[ $1 == '-fh' ]] ;then
-ls -dF .* | grep -v / > $TMP && column $TMP
+ls -aF $lz | grep -v / | grep '^\.' | grep -v '@$' > $TMP && column $TMP >/dev/null 2>&1
+  if [ $? = 0 ];then
+  	ls -aF $lz | grep -v / | grep '^\.' | grep -v '@$' > $TMP && column $TMP
+  else
+  	echo 'File is not found!'
+  fi
 elif [[ $1 == '--file=hidden' ]]; then
-ls -dF .* | grep -v / > $TMP && column $TMP
+ls -aF $lz | grep -v / | grep '^\.' | grep -v '@$' > $TMP && column $TMP >/dev/null 2>&1
+  if [ $? = 0 ];then
+  	ls -aF $lz | grep -v / | grep '^\.' | grep -v '@$' > $TMP && column $TMP
+  else
+  	echo 'File is not found!'
+  fi
 elif [[ $1 == '-hf' ]]; then
-ls -dF .* | grep -v / > $TMP && column $TMP
+ls -aF $lz | grep -v / | grep '^\.' | grep -v '@$' > $TMP && column $TMP >/dev/null 2>&1
+  if [ $? = 0 ];then
+  	ls -aF $lz | grep -v / | grep '^\.' | grep -v '@$' > $TMP && column $TMP
+  else
+  	echo 'File is not found!'
+  fi
 elif [[ $1 == '--hidden-file' ]]; then
-ls -dF .* | grep -v / > $TMP && column $TMP
+ls -aF $lz | grep -v / | grep '^\.' | grep -v '@$' > $TMP && column $TMP >/dev/null 2>&1
+  if [ $? = 0 ];then
+  	ls -aF $lz | grep -v / | grep '^\.' | grep -v '@$' > $TMP && column $TMP
+  else
+  	echo 'File is not found!'
+  fi
 
 #実行ファイル(隠しのみ)表示
 elif [[ $1 == '-xh' ]]; then
@@ -86,9 +126,31 @@ ls -dF .* | grep / > $TMP && ls -F | grep / >> $TMP && ls -dF .* | grep -v / >> 
 elif [[ $1 == '--all' ]]; then
 ls -dF .* | grep / > $TMP && ls -F | grep / >> $TMP && ls -dF .* | grep -v / >> $TMP && ls -F | grep -v / >> $TMP && sed '1,2d' $TMP > $TMP2 && column $TMP2
 
-#ディレクトリとファイル(隠しなし)を表示
+#ディレクトリとファイル(隠しディレクトリor隠しファイルなし,実行ファイル含む)を表示
 else
-ls -F | grep / > $TMP && ls -F | grep -v / >> $TMP && column $TMP
+	dir () { 
+	   ls -F $lz | grep / >/dev/null 2>&1
+	}
+
+	dir
+	dir=$?
+
+	fil () {
+	   ls -F $lz | grep -v / >/dev/null 2>&1
+	}
+
+	fil
+	fil=$?
+
+	if [ $dir = 0 ]; then
+	  ls -F $lz | grep / > $TMP && ls -F $lz | grep -v / >> $TMP && column $TMP
+	elif [ $dir != 0 ]; then
+      if [ $fil = 0 ]; then
+      	ls -F $lz | grep -v / > $TMP && column $TMP
+      elif [ $fil != 0 ]; then
+      	echo -e 'Not find anything!\nThis is an empty directory.'
+      fi
+    fi
 fi
 
 trap "rm -rf $TMP | rm -rf $TMP2" EXIT
