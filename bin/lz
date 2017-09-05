@@ -48,14 +48,14 @@ elif [[ $1 == '-f' ]]; then
 	if [ $? = 0 ]; then
 	  ls -F $lz | grep -v / | grep -v '*$' > $TMP && column $TMP
 	else
-	  echo 'File is not found!'
+	  echo 'No file was found!'
 	fi
 elif [[ $1 == '--file' ]]; then
 	ls -F $lz | grep -v / | grep -v '*$' > $TMP && column $TMP >/dev/null 2>&1
 if [ $? = 0 ]; then
 	  ls -F $lz | grep -v / | grep -v '*$' > $TMP && column $TMP
 	else
-	  echo 'File is not found!'
+	  echo 'No file was found!'
 	fi
 
 #実行ファイルのみ表示
@@ -64,44 +64,44 @@ elif [[ $1 == '-x' ]]; then
 	if [ $? = 0 ]; then
 	  ls -F $lz | grep -v / | grep '*$' > $TMP && column $TMP
 	else
-	  echo 'File is not found!'
+	  echo 'No executable file was found!'
 	fi
 elif [[ $1 == '--executable' ]]; then
 	ls -F $lz | grep -v / | grep '*$' > $TMP && column $TMP >/dev/null 2>&1
 	if [ $? = 0 ]; then
 	  ls -F $lz | grep -v / | grep '*$' > $TMP && column $TMP
 	else
-	  echo 'File is not found!'
+	  echo 'No executable file was found!'
 	fi
 
 #ファイル(隠しのみ)表示
 elif [[ $1 == '-fh' ]] ;then
-ls -aF $lz | grep -v / | grep '^\.' | grep -v '@$' > $TMP && column $TMP >/dev/null 2>&1
+ls -aF $lz | grep -v / | grep -v '@$' | grep -v '*$' | grep '^\.' > $TMP && column $TMP >/dev/null 2>&1
   if [ $? = 0 ];then
-  	ls -aF $lz | grep -v / | grep '^\.' | grep -v '@$' > $TMP && column $TMP
+  	ls -aF $lz | grep -v / | grep -v '@$' | grep -v '*$' | grep '^\.' > $TMP && column $TMP
   else
-  	echo 'File is not found!'
+  	echo 'None of the hidden files were found!'
   fi
 elif [[ $1 == '--file=hidden' ]]; then
-ls -aF $lz | grep -v / | grep '^\.' | grep -v '@$' > $TMP && column $TMP >/dev/null 2>&1
+ls -aF $lz | grep -v / | grep -v '@$' | grep -v '*$' | grep '^\.' > $TMP && column $TMP >/dev/null 2>&1
   if [ $? = 0 ];then
-  	ls -aF $lz | grep -v / | grep '^\.' | grep -v '@$' > $TMP && column $TMP
+  	ls -aF $lz | grep -v / | grep -v '@$' | grep -v '*$' | grep '^\.' > $TMP && column $TMP
   else
-  	echo 'File is not found!'
+  	echo 'None of the hidden files were found!'
   fi
 elif [[ $1 == '-hf' ]]; then
-ls -aF $lz | grep -v / | grep '^\.' | grep -v '@$' > $TMP && column $TMP >/dev/null 2>&1
+ls -aF $lz | grep -v / | grep -v '@$' | grep -v '*$' | grep '^\.' > $TMP && column $TMP >/dev/null 2>&1
   if [ $? = 0 ];then
-  	ls -aF $lz | grep -v / | grep '^\.' | grep -v '@$' > $TMP && column $TMP
+  	ls -aF $lz | grep -v / | grep -v '@$' | grep -v '*$' | grep '^\.' > $TMP && column $TMP
   else
-  	echo 'File is not found!'
+  	echo 'None of the hidden files were found!'
   fi
 elif [[ $1 == '--hidden-file' ]]; then
-ls -aF $lz | grep -v / | grep '^\.' | grep -v '@$' > $TMP && column $TMP >/dev/null 2>&1
+ls -aF $lz | grep -v / | grep -v '@$' | grep -v '*$' | grep '^\.' > $TMP && column $TMP >/dev/null 2>&1
   if [ $? = 0 ];then
-  	ls -aF $lz | grep -v / | grep '^\.' | grep -v '@$' > $TMP && column $TMP
+  	ls -aF $lz | grep -v / | grep -v '@$' | grep -v '*$' | grep '^\.' > $TMP && column $TMP
   else
-  	echo 'File is not found!'
+  	echo 'None of the hidden files were found!'
   fi
 
 #実行ファイル(隠しのみ)表示
