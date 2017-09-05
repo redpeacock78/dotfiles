@@ -132,9 +132,9 @@ brunch=$'\ue0a0'
 git=$'\xef\x87\x93 '
 zstyle ':vcs_info:git:*' check-for-changes true
 zstyle ':vcs_info:*' max-exports 3
-zstyle ':vcs_info:git:*' stagedstr "%F{yellow}${EXCLAMATION_yelow}%f"
+zstyle ':vcs_info:git:*' stagedstr "%F{yellow}${EXCLAMATION_yellow}%f"
 zstyle ':vcs_info:git:*' unstagedstr "%F{red}${EXCLAMATION_red}%f"
-zstyle ':vcs_info:*' formats "[%F{green}${CHECK}%f%c%u%f]
+zstyle ':vcs_info:*' formats "[%F{green}${CHECK}%c%u%f]
 " ":%${BLUE}${ARROW}%f" " %F${BLUE}%b${brunch}${git}%f"
 zstyle ':vcs_info:*' actionformats "[%b|%a]%c%u" "[%b|%a]"
 precmd () { vcs_info }
@@ -207,6 +207,9 @@ setopt NO_beep
 
 ###補完候補を詰めて表示###
 setopt list_packed
+
+###改行なしの行を表示###
+unsetopt promptcr
 
 ###aliasの設定をrootの時だけ分ける###
 case ${UID} in
