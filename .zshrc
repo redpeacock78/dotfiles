@@ -124,14 +124,17 @@ export PATH="/usr/local/opt/icu4c/sbin:$PATH"
 autoload -Uz vcs_info
 ###git(vcs_info)関連###
 setopt prompt_subst
+EXCLAMATION_yellow=$'\xef\x81\xb1 '
+EXCLAMATION_red=$'\xef\x81\xaa '
 CHECK=$'\U2714 '
 brunch=$'\ue0a0'
 git=$'\xef\x87\x93 '
 zstyle ':vcs_info:git:*' check-for-changes true
 zstyle ':vcs_info:*' max-exports 3
-zstyle ':vcs_info:git:*' stagedstr "%F{yellow}！%f"
-zstyle ':vcs_info:git:*' unstagedstr "%F{red}＋%f"
-zstyle ':vcs_info:*' formats "[%F{green}${CHECK}%f%c%u%f]" " %F${BLUE}%b${brunch}${git}%f"
+zstyle ':vcs_info:git:*' stagedstr "%F{yellow}${EXCLAMATION_yelow}%f"
+zstyle ':vcs_info:git:*' unstagedstr "%F{red}${EXCLAMATION_red}%f"
+zstyle ':vcs_info:*' formats "[%F{green}${CHECK}%f%c%u%f]
+" " %F${BLUE}%b${brunch}${git}%f"
 zstyle ':vcs_info:*' actionformats "[%b|%a]%c%u" "[%b|%a]"
 precmd () { vcs_info }
 
