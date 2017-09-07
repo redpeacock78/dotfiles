@@ -164,7 +164,7 @@ function prompt_update () {
 if [[ `git status 2>&1` =~ "Not a git" ]]; then
   prompt="%B%(?.%(!.${PURPLE}.${GREEN}).${RED})%n"@"%m${DEFAULT}:${BLUE}%~${DEFAULT}%b%(!.#.$) "
 elif [[ ! `git status 2>&1` =~ "On brunch" ]]; then
-  prompt="[%B%(?.%(!.${PURPLE}.${GREEN}).${RED})%n"@"%m${DEFAULT}]%b\n${BLUE}%~${DEFAULT}${vcs_info_msg_0_}[`cat <(git show -s --format=%H | cut -c 1-7)`]${vcs_info_msg_1_} "
+  prompt="%B%(?.%(!.${PURPLE}.${GREEN}).${RED})%n"@"%m${DEFAULT}%b\n${BLUE}%~${DEFAULT}${vcs_info_msg_0_}[`cat <(git show -s --format=%H | cut -c 1-7)`]${vcs_info_msg_1_} "
 fi
 echo "$prompt"
 }
