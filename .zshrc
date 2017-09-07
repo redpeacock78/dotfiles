@@ -124,18 +124,15 @@ export PATH="/usr/local/opt/icu4c/sbin:$PATH"
 autoload -Uz vcs_info
 ###git(vcs_info)関連###
 setopt prompt_subst
-EXCLAMATION_yellow=$'\xef\x81\xb1 '
-EXCLAMATION_red=$'\xef\x81\xaa '
 CHECK=$'\U2714 '
-ARROW=$'\U27A1 '
 brunch=$'\ue0a0'
+quarter_spase=$'\U2005'
 git=$'\xef\x87\x93 '
 zstyle ':vcs_info:git:*' check-for-changes true
 zstyle ':vcs_info:*' max-exports 3
-zstyle ':vcs_info:git:*' stagedstr "%F{yellow}${EXCLAMATION_yellow}%f"
-zstyle ':vcs_info:git:*' unstagedstr "%F{red}${EXCLAMATION_red}%f"
-zstyle ':vcs_info:*' formats "[%F{green}${CHECK}%c%u%f]
-" ":%${BLUE}${ARROW}%f" " %F${BLUE}%b${brunch}${git}%f"
+zstyle ':vcs_info:git:*' stagedstr "%F{yellow}！%f"
+zstyle ':vcs_info:git:*' unstagedstr "%F{red}＋%f"
+zstyle ':vcs_info:*' formats "[%F{green}${CHECK}%c%u%f]" "%F${BLUE}≫%f " " %F${BLUE}%b${brunch}${git}%f"
 zstyle ':vcs_info:*' actionformats "[%b|%a]%c%u" "[%b|%a]"
 precmd () { vcs_info }
 
@@ -162,7 +159,18 @@ function _update_vcs_info_msg() {
   add-zsh-hook precmd _update_vcs_info_msg
 
 ###プロンプト表示設定###
-PROMPT="%B%(?.%(!.${PURPLE}.${GREEN}).${RED})%n"@"%m${DEFAULT}:${BLUE}%~${DEFAULT}%b" #メインプロンプト(通常時は緑、root時は紫、コマンドがエラーだった場合次に表示されるプロンプトは赤)
+#メインプロンプト(通常時は緑、root時は紫、コマンドがエラーだった場合次に表示されるプロンプトは赤)
+
+function prompt_update () {
+if [[ `git status 2>&1` =~ "Not a git" ]]; then
+  prompt="%B%(?.%(!.${PURPLE}.${GREEN}).${RED})%n"@"%m${DEFAULT}:${BLUE}%~${DEFAULT}%b%(!.#.$) "
+elif [[ ! `git status 2>&1` =~ "On brunch" ]]; then
+  prompt="[%B%(?.%(!.${PURPLE}.${GREEN}).${RED})%n"@"%m${DEFAULT}]\n${BLUE}%~${DEFAULT}${vcs_info_msg_0_}%b${vcs_info_msg_1_} "
+fi
+echo "$prompt"
+}
+
+PROMPT='`prompt_update`'
 PROMPT2="%B%(?.%(!.${PURPLE}.${GREEN}).${RED})%n"@"%m${DEFAULT}:${BLUE}%~${DEFAULT}" #セカンダリプロンプト
 SPROMPT="%B%U${YELLOW}Correct${DEFAULT}%u: ${RED}%R${DEFAULT} 👉 ${BLUE}%r${DEFAULT} ?%b [No/Yes/About/Edit] " #コマンド訂正表示
 RPROMPT='[%D{%Y/%m/%d %H:%M:%S}${vcs_info_msg_2_}]' #右プロンプト時刻表示
@@ -171,7 +179,6 @@ TRAPALRM () { zle reset-prompt }
 TMOUT=01
 
 #PROMPT(git)表示#
-PROMPT=$PROMPT'${vcs_info_msg_0_}%(!.#.$)${vcs_info_msg_1_} '
 PROMPT2=$PROMPT2'${vcs_info_msg_0_}%(!.#.$)%b${BLUE2}%_> ${DEFAULT}'
 
 
