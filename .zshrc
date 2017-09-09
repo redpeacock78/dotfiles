@@ -109,6 +109,8 @@ export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 source /sw/bin/init.sh
 ###独自コマンド###
 export PATH="$HOME/bin:$PATH"
+###coreutils###
+export PATH=$(brew --prefix coreutils)/libexec/gnubin:$PATH
 
 ##Ricty(powerline)関連##
 export PATH="/usr/local/opt/sqlite/bin:$PATH"
@@ -231,6 +233,7 @@ esac
 precmd() {echo -ne "\033]0;${USER}@${HOST}:$(pwd | sed -e "s,^$HOME,~,g")\007"}
 
 ###alias設定###
+alias echo="gecho"
 alias /='../'
 alias ls="ls -F --color=auto"
 alias la="ls -A --color=auto"
