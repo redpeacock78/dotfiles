@@ -1,3 +1,5 @@
+###tmux###
+[[ -z "$TMUX" && ! -z "$PS1" ]] && tmux
 ###zsh-plugin###
 fpath=(/usr/local/share/zsh-completions $fpath)
 ##zsh-history-substring-search##
@@ -88,7 +90,7 @@ export LESSOPEN='| /usr/local/bin/src-hilite-lesspipe.sh %s'
 
 ###言語関連###
 ##swift-PATH##
-export PATH="/home/redpeacock978/swift-3.0.2-RELEASE-ubuntu16.04/usr/bin:$PATH"
+export PATH="$HOME/swift-3.0.2-RELEASE-ubuntu16.04/usr/bin:$PATH"
 ##pyhton-PATH##
 export PATH="$HOME/.pyenv/shims:$PATH"
 ##ryby-PATH##
@@ -168,7 +170,11 @@ if [[ `git status 2>&1` =~ "Not a git" ]]; then
 elif [[ ! `git status 2>&1` =~ "On brunch" ]]; then
   prompt="%B%(?.%(!.${PURPLE}.${GREEN}).${RED})%n"@"%m${DEFAULT}%b\n${BLUE}%~${DEFAULT}%b${vcs_info_msg_0_}[`cat <(git show -s --format=%H | cut -c 1-7)`]${vcs_info_msg_1_} "
 fi
-echo "$prompt"
+echo -e "$prompt"
+}
+
+new () {
+   awk '{ $1="\b" ; printf("%s\n",$0) }' <(awk '{ $1="" ; printf("%s\n",$0) }' <(awk '{if(m<$1) m=$1 $0} END{print m}' <(history))) | sed -e 's/ //'
 }
 
 PROMPT='`prompt_update`' #メインプロンプト(通常時は緑、root時は紫、コマンドがエラーだった場合次に表示されるプロンプトは赤)
@@ -192,11 +198,11 @@ setopt share_history  #他のターミナルと履歴を共有
 setopt inc_append_history #シェルを横断して.zsh_historyに記録
 
 ###コマンド履歴検索###
-autoload history-search-end
-zle -N history-beginning-search-backward-end history-search-end
-zle -N history-beginning-search-forward-end history-search-end
-bindkey "^P" history-beginning-search-backward-end
-bindkey "^N" history-beginning-search-forward-end
+#autoload history-search-end
+#zle -N history-beginning-search-backward-end history-search-end
+#zle -N history-beginning-search-forward-end history-search-end
+#bindkey "^P" history-beginning-search-backward-end
+#bindkey "^N" history-beginning-search-forward-end
 
 ###ディレクトリの指定で移動###
 setopt auto_cd
@@ -233,7 +239,9 @@ esac
 precmd() {echo -ne "\033]0;${USER}@${HOST}:$(pwd | sed -e "s,^$HOME,~,g")\007"}
 
 ###alias設定###
-alias echo="gecho"
+if [ -f /usr/local/bin/gecho ]; then
+alias echo="/usr/local/bin/gecho"
+fi
 alias /='../'
 alias ls="ls -F --color=auto"
 alias la="ls -A --color=auto"
@@ -428,7 +436,9 @@ alias -s {deb,rpm}='(){case $1 in
 *.rpm) sudo alien -i $1;;
 esac}'
 ###exeファイル###
+if [[ `uname` =~ "Ubuntu" ]]; then
 alias -s exe='(){wine env XMODIFIERS="@im=fcitx" $1}'
+fi
 
 
 ###独自コマンド###
@@ -436,7 +446,9 @@ alias wi="wiki"
 alias wa="wiki -a"
 
 ###lsh###
+if [ -f /Users/redpeacock78/lsh/src/lsh ]; then
 alias lsh="/Users/redpeacock78/lsh/src/lsh"
+fi
 
 ###お遊び###
 ##水族館##
@@ -455,7 +467,7 @@ alias banana='echo "\xf0\x9f\x8d\x8c"'
 function 256() {
     local code
     for c in {000..255}; do
-        echo -n "\e[38;5;${c}m $c"; [ $(($c%16)) -eq 15 ] && echo
+        echo -en "\e[38;5;${c}m $c"; [ $(($c%16)) -eq 15 ] && echo
     done
 echo
 }
