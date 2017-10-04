@@ -9,7 +9,7 @@
                 "name": "time",
                 "args": {
                     "format": "%Y/%m/%d %H:%M:%S",
-                    "istime": false 
+                    "istime": true
                 }
             },
             {
@@ -23,7 +23,16 @@
             },
             {
                 "function": "powerline.segments.common.vcs.branch"
-            }
+            },
+            {
+                "function":"powerline.segments.common.net.network_load"
+            },
+             {
+                "function":"powerline.segments.common.bat.battery"
+                "before": "Battery:",
+                "width": 16,
+                "align": "c"
+             }
         ],
         "left": [
         ]

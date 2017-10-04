@@ -1,5 +1,9 @@
 ###tmux###
 [[ -z "$TMUX" && ! -z "$PS1" ]] && tmux
+###.vimrc###
+if [ -f ~/.vimrc ]; then
+  source ~/.vimrc
+fi
 ###zsh-plugin###
 fpath=(/usr/local/share/zsh-completions $fpath)
 ##zsh-history-substring-search##
@@ -94,7 +98,7 @@ export PATH="$HOME/swift-3.0.2-RELEASE-ubuntu16.04/usr/bin:$PATH"
 ##pyhton-PATH##
 export PATH="$HOME/.pyenv/shims:$PATH"
 ##ryby-PATH##
-export PATH="/usr/bin/ruby:$PATH"
+export PATH="/usr/local/bingem$PATH"
 ###C#(mono)-PATH###
 export PATH="/opt/mono/bin:$PATH"
 ###GO-PATH##
