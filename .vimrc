@@ -5,6 +5,8 @@
 set noswapfile
 "入力中のコマンドをステータスに表示"
 set showcmd
+"バックスペースの有効化"
+set backspace=indent,eol,start
 "----------ここまで----------"
 
 
@@ -14,17 +16,19 @@ set showcmd
 set number
 "インデントをスマートインデントに"
 set smartindent
-"カッコを入力するときに対になるカッコを自動入力"
+"カッコにカーソルが当たったときに対になるカッコを強調"
 set showmatch
 "ステータスラインを表示"
 set laststatus=2
 "現在の行を強調"
 set cursorline
+"現在の列を強調"
+set cursorcolumn
 "シンタックスハイライトの表示"
 syntax on
 "vimテーマ有効化"
 set background=dark
-colorscheme  solarized
+colorscheme solarized
 "-----------ここまで----------"
 
 
@@ -32,8 +36,8 @@ colorscheme  solarized
 "-----------NeoBundle----------"
 set nocompatible
 filetype off
-    set runtimepath+=~/.vim/bundle/neobundle.vim
-    call neobundle#begin(expand('~/.vim/bundle/'))
+set runtimepath+=~/.vim/bundle/neobundle.vim
+call neobundle#begin(expand('~/.vim/bundle/'))
  
 "------ここから下に入れたいNeobundle pluginを書く------"
 "NERDTree"
@@ -81,3 +85,4 @@ map <C-e> :q!<CR>
 "ファイルの内容を保存して終了"
 map <C-z> :wq<CR>
 "-----------ここまで-----------"
+
