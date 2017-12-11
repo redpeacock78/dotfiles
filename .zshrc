@@ -1,9 +1,13 @@
 ###tmux###
 [[ -z "$TMUX" && ! -z "$PS1" ]] && tmux
-###.vimrc###
-if [ -f ~/.vimrc ]; then
-  source ~/.vimrc
-fi
+
+function exit-tmux() {
+	exit tmux
+	zle clear-screen
+}
+zle -N exit-tmux
+bindkey '^t' exit-tmux
+
 ###zsh-plugin###
 fpath=(/usr/local/share/zsh-completions $fpath)
 ##zsh-history-substring-search##
@@ -14,6 +18,7 @@ fi
 if [ -f $HOME/.fzf.zsh ]; then
   source $HOME/.fzf.zsh
 fi
+
 ##peco##
 function peco-select-history() {                           
     BUFFER=$(\history -n 1 | tac | peco --query "$LBUFFER")

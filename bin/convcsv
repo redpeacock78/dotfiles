@@ -1,0 +1,18 @@
+#! /bin/bash
+
+#nkf -w --overwrite --oc=UTF-8-BOM $@
+#open $@ -a /Applications/Microsoft\ Excel.app
+
+if [[ `nkf --guess "$@"` =~ Shift_JIS ]]; then
+  nkf -w --overwrite --oc=UTF-8-BOM "$@"
+  open "$@" -a /Applications/Microsoft\ Excel.app
+elif [[ `nkf --guess "$@"` =~ EUC-JP ]]; then
+	nkf -w --overwrite --oc=UTF-8-BOM "$@"
+	open "$@" -a /Applications/Microsoft\ Excel.app
+elif [[ `nkf --guess "$@"` =~ UTF-8 ]]; then
+	nkf --overwrite --oc=UTF-8-BOM "$@"
+	open "$@" -a /Applications/Microsoft\ Excel.app
+elif [[ `nkf --guess "$@"` =~ "UTF-8 (BOM)" ]]; then
+	open "$@" -a /Applications/Microsoft\ Excel.app
+fi
+

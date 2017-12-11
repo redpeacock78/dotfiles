@@ -1,0 +1,123 @@
+#! /bin/bash
+
+ACCESS_TOKEN=`cat ~/access_token.txt 2>/dev/null | awk 'NR==2' | awk '{print $3}' | sed -e 's/"//' -e 's/,//' -e 's/"//'`
+REFRESH_TOKEN=`cat ~/access_token.txt 2>/dev/null | awk 'NR==4' | awk '{print $3}' | sed -e 's/"//' -e 's/,//' -e 's/"//'`
+REFRESH_ACCESS=`cat ~/refresh_token.txt 2>/dev/null | awk 'NR==2' | awk '{print $3}' | sed -e 's/"//' -e 's/,//' -e 's/"//'`
+
+if [[ $1 == list ]]; then
+echo -e "Please access this URL in the browser:\nhttps://accounts.google.com/o/oauth2/auth?client_id=67491856712-b1d9q83ulflil5h7ijbg8jl1ug2rjus3.apps.googleusercontent.com&response_type=code&redirect_uri=urn:ietf:wg:oauth:2.0:oob&scope=https://www.googleapis.com/auth/drive\n"
+read -p "Your cord: " CODE
+
+curl -s -X POST https://accounts.google.com/o/oauth2/token \
+-d "code=$CODE" \
+-d "client_id=67491856712-b1d9q83ulflil5h7ijbg8jl1ug2rjus3.apps.googleusercontent.com" \
+-d "client_secret=Pdma35XKsly9OznhSbgNV4r0" \
+-d "redirect_uri=urn:ietf:wg:oauth:2.0:oob" \
+-d "grant_type=authorization_code" > ~/access_token.txt
+
+elif [[ $1 == refresh ]]; then
+curl -s -X POST https://accounts.google.com/o/oauth2/token \
+-d "refresh_token=$REFRESH_TOKEN" \
+-d "client_id=67491856712-b1d9q83ulflil5h7ijbg8jl1ug2rjus3.apps.googleusercontent.com" \
+-d "client_secret=Pdma35XKsly9OznhSbgNV4r0" \
+-d "grant_type=refresh_token" > ~/refresh_token.txt
+
+elif [[ $1 == ls ]]; then
+	if [[ `expr $(date -u +%s) - $(stat -c %Y access_token.txt)` -gt "3600" ]]; then
+		echo "Pleese wait..."
+		curl -s -X POST https://accounts.google.com/o/oauth2/token \
+		-d "refresh_token=$REFRESH_TOKEN" \
+		-d "client_id=67491856712-b1d9q83ulflil5h7ijbg8jl1ug2rjus3.apps.googleusercontent.com" \
+		-d "client_secret=Pdma35XKsly9OznhSbgNV4r0" \
+		-d "grant_type=refresh_token" > ~/refresh_token.txt 
+		curl -s "https://www.googleapis.com/drive/v2/files?access_token=$REFRESH_ACCESS" \
+		| awk '/title/ ;/trashed/ {print}' \
+		| sed -e 's/"title": "//' -e 's/",//' -e 's/^   //' -e 's/ "trashed": //' -e 's/,//' \
+		| tr '\n' ' ' \
+		| sed -e 's/false /false\n/g' -e 's/true /true\n/g' \
+		| awk '/false/ {print}' \
+		| sed -e 's/false//' \
+		| sort
+	elif [[ `expr $(date -u +%s) - $(stat -c %Y access_token.txt)` -ge "3600" ]]; then
+		curl -s "https://www.googleapis.com/drive/v2/files?access_token=$REFRESH_ACCESS" \
+		| awk '/title/ ;/trashed/ {print}' \
+		| sed -e 's/"title": "//' -e 's/",//' -e 's/^   //' -e 's/ "trashed": //' -e 's/,//' \
+		| tr '\n' ' ' \
+		| sed -e 's/false /false\n/g' -e 's/true /true\n/g' \
+		| awk '/false/ {print}' \
+		| sed -e 's/false//'
+	fi
+elif [[ $1 == trash ]]; then
+	if [[ `curl "https://www.googleapis.com/drive/v2/files?access_token=$ACCESS_TOKEN" 2>&1` =~ "error" ]]; then
+		echo "Please Wait..."
+		curl -s -X POST https://accounts.google.com/o/oauth2/token \
+		-d "refresh_token=$REFRESH_TOKEN" \
+		-d "client_id=67491856712-b1d9q83ulflil5h7ijbg8jl1ug2rjus3.apps.googleusercontent.com" \
+		-d "client_secret=Pdma35XKsly9OznhSbgNV4r0" \
+		-d "grant_type=refresh_token" > ~/refresh_token.txt 
+		curl -s "https://www.googleapis.com/drive/v2/files?access_token=$REFRESH_ACCESS" \
+		| awk '/title/ ;/trashed/ {print}' \
+		| sed -e 's/"title": "//' -e 's/",//' -e 's/^   //' -e 's/ "trashed": //' -e 's/,//' \
+		| tr '\n' ' ' \
+		| sed -e 's/false /false\n/g' -e 's/true /true\n/g' \
+		| awk '/true/ {print}' \
+		| sed -e 's/true//'
+	else
+		curl -s "https://www.googleapis.com/drive/v2/files?access_token=$ACCESS_TOKEN" \
+		| awk '/title/ ;/trashed/ {print}' \
+		| sed -e 's/"title": "//' -e 's/",//' -e 's/^   //' -e 's/ "trashed": //' -e 's/,//' \
+		| tr '\n' ' ' \
+		| sed -e 's/false /false\n/g' -e 's/true /true\n/g' \
+		| awk '/true/ {print}' \
+		| sed -e 's/true//'
+	fi
+elif [[ $1 == find ]]; then
+	if [[ `curl "https://www.googleapis.com/drive/v2/files?access_token=$ACCESS_TOKEN" 2>&1` =~ "error" ]]; then
+		echo "Please wait..." 
+		sleep 1.5s
+		curl -s -X POST https://accounts.google.com/o/oauth2/token \
+		-d "refresh_token=$REFRESH_TOKEN" \
+		-d "client_id=67491856712-b1d9q83ulflil5h7ijbg8jl1ug2rjus3.apps.googleusercontent.com" \
+		-d "client_secret=Pdma35XKsly9OznhSbgNV4r0" \
+		-d "grant_type=refresh_token" > ~/refresh_token.txt 
+		echo "Compleat."
+		curl -s "https://www.googleapis.com/drive/v2/files?access_token=$REFRESH_ACCESS" \
+		| awk '/title/ ;/trashed/ {print}' \
+		| sed -e 's/"title": "//' -e 's/",//' -e 's/^   //' -e 's/ "trashed": //' -e 's/,//' \
+		| tr '\n' ' ' \
+		| sed -e 's/false /false\n/g' -e 's/true /true\n/g' \
+		| awk '/false/ {print}' \
+		| sed -e 's/false//' \
+		| awk "/$2/ {print}" \
+		| sort 
+	else
+		curl -s "https://www.googleapis.com/drive/v2/files?access_token=$ACCESS_TOKEN" \
+		| awk '/title/ ;/trashed/ {print}' \
+		| sed -e 's/"title": "//' -e 's/",//' -e 's/^   //' -e 's/ "trashed": //' -e 's/,//' \
+		| tr '\n' ' ' \
+		| sed -e 's/false /false\n/g' -e 's/true /true\n/g' \
+		| awk '/false/ {print}' \
+		| sed -e 's/false//' \
+		| awk "/$2/ {print}" \
+		| sort
+	fi
+elif [[ $1 == up ]]; then
+	if [[ `curl "https://www.googleapis.com/drive/v2/files?access_token=$ACCESS_TOKEN" 2>&1` =~ "error" ]]; then
+		curl -s -X POST https://accounts.google.com/o/oauth2/token \
+		-d "refresh_token=$REFRESH_TOKEN" \
+		-d "client_id=67491856712-b1d9q83ulflil5h7ijbg8jl1ug2rjus3.apps.googleusercontent.com" \
+		-d "client_secret=Pdma35XKsly9OznhSbgNV4r0" \
+		-d "grant_type=refresh_token" > ~/refresh_token.txt
+		curl -X POST "https://www.googleapis.com/upload/drive/v2/files?uploadType=multipart" \
+		-H "Authorization: Bearer $REFRESH_ACCESS" \
+		-H "Content-Type: multipart/related" \
+		-F "metadata=@metadata.txt;type=application/json;charset=UTF-8" \
+		-F "file=@img001.jpg;type=image/jpeg"
+	else
+		curl -X POST "https://www.googleapis.com/upload/drive/v2/files?uploadType=multipart" \
+		-H "Authorization: Bearer $ACCESS_TOKEN" \
+		-H "Content-Type: multipart/related" \
+		-F "metadata=@metadata.txt;type=application/json;charset=UTF-8" \
+		-F "file=@img001.jpg;type=image/jpeg"
+	fi
+fi

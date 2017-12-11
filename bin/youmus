@@ -1,0 +1,223 @@
+#! /bin/bash
+
+#Author:[redpeacock78]
+#email:[scarletpeacock78@gmail.com]
+#git:[git@github.com:redpeacock78]
+
+#      _   _  ___  _   _ _ __ ___  _   _ ___      #
+#     | | | |/ _ \| | | | '_ ` _ \| | | / __|     # 
+#     | |_| | (_) | |_| | | | | | | |_| \__ \     #
+#      \__, |\___/ \__,_|_| |_| |_|\__,_|___/     #
+#      |___/                                      #
+
+
+
+##########BEGIN##########
+#区切り文字を改行に限定
+IFS='
+'
+
+###Variable specification###
+PLAYBACK_TARGET=`echo $@ | sed -e "s/^-*[a-z0-9]*[ ]//" -e "s/watch?v=[0-9a-zA-Z]*&/playlist?/g" -e "s/[ ]-*[a-z0-9]*$//" -e "s/ \//\n\//g" -e "s/ http/\nhttp/g"`
+
+###Play it shuffle.###
+if [[ $1 == '-s' ]] \
+	|| [[ ${@:2} == '-s' ]] \
+	|| [[ $1 == '--shuffle' ]] \
+	|| [[ ${@:2} == '--shuffle' ]]; then
+	if [[ "$PLAYBACK_TARGET" =~ playlist ]] && [[ "$PLAYBACK_TARGET" =~ http ]]; then
+		mpv --ytdl-format="bestaudio" --shuffle $PLAYBACK_TARGET
+	elif [[ "$PLAYBACK_TARGET" =~ .m3u ]] || [[ "$PLAYBACK_TARGET" =~ .m3u8 ]]; then
+		if [[ `grep -s '' $PLAYBACK_TARGET | grep -v -s '#' | wc -l` -gt 1 ]]; then
+			mpv --ytdl-format="bestaudio" --shuffle --playlist=$PLAYBACK_TARGET
+		elif [[ `grep -s '' $PLAYBACK_TARGET | grep -v -s '#' | wc -l` -le 1 ]]; then
+			#OS判定
+			#Mackintosh
+			if [ "$(uname)" == 'Darwin' ]; then
+			  printf "\e[31mThis can not be shuffled.\nThere is only one item you want to play back, or nothing is written.\e[m\n"
+			  while true; do
+				   read -p "Do you play without shuffling? [Y/n/q]: " ANSWER
+				   case $ANSWER in
+				       [Yy] | [Yy][Ee][Ss] | "" ) printf "\e[33mShuffle Playback will be canceled and played on a playlist basis.\e[m\n"
+												  sleep 1.7s
+												  mpv --ytdl-format="bestaudio" --playlist=$PLAYBACK_TARGET
+												  break ;;
+				       [Nn] | [Nn][Oo] ) printf "\e[34mShuffle play is executed...\e[m\n"
+										 sleep 1.7s
+										 mpv --shuffle --ytdl-format="bestaudio" --playlist=$PLAYBACK_TARGET
+										 break ;;
+				       [Qq] | [Uu][Ii][Tt] ) printf "\nExiting... (Quit)\n" && sleep 1.7s && break ;;
+				       * ) printf "\nPlease enter in [Y/n/q].";;
+				   esac
+			   done
+			#Linux system
+			elif [ "$(expr substr $(uname -s) 1 5)" == 'Linux' ]; then
+				echo -e "\e[31mThis can not be shuffled.\nThere is only one item you want to play back, or nothing is written.\e[m\n"
+				while true; do
+					 read -p "Do you play without shuffling? [Y/n/q]: " ANSWER
+					 case $ANSWER in
+				 	 	 [Yy] | [Yy][Ee][Ss] | "" ) echo -e "\e[33mShuffle Playback will be canceled and played on a playlist basis.\e[m\n"
+													sleep 1.7s
+													mpv --ytdl-format="bestaudio" --playlist=$PLAYBACK_TARGET
+													break ;;
+				 	 	 [Nn] | [Nn][Oo] ) echo -e "\e[34mShuffle play is executed...\e[m\n"
+										   sleep 1.7s
+										   mpv --shuffle --ytdl-format="bestaudio" --playlist=$PLAYBACK_TARGET
+										   break ;;
+						 [Qq] | [Uu][Ii][Tt] ) echo -e "\nExiting... (Quit)\n" && sleep 1.7s && break ;;
+						 * ) echo -e "\nPlease enter in [Y/n/q].";;
+					 esac
+				done
+			fi
+		fi
+	elif [[ "$PLAYBACK_TARGET" =~ watch ]] && [[ "$PLAYBACK_TARGET" =~ http ]]; then
+		if [[ `echo "$PLAYBACK_TARGET" | sed "s/watch/watch\n/gi" | grep -c "watch" ` != 1 ]]; then
+			mpv --ytdl-format="bestaudio" --shuffle $PLAYBACK_TARGET
+		elif [[ `echo "$PLAYBACK_TARGET" | sed "s/watch/watch\n/gi" | grep -c "watch"` = 1 ]]; then
+			echo "This can not be shuffled." && exit 2
+		fi
+	elif [[ -d "$PLAYBACK_TARGET" ]]; then
+		if [[ `file "$PLAYBACK_TARGET"* | grep M3U | wc -l` -gt 1 ]]; then
+			if [[ `grep -s '' "$PLAYBACK_TARGET"* | grep -v -s '#' | wc -l` -gt 1 ]]; then
+				mpv --ytdl-format="bestaudio" --shuffle --playlist=$PLAYBACK_TARGET
+			elif [[ `grep -s '' "$PLAYBACK_TARGET"* | grep -v -s '#' | wc -l` -le 1 ]]; then
+				echo -e "This can not be shuffled.\nThere is only one item you want to play back, or nothing is written."
+				while true; do
+					read -p 'Do you play without shuffling? [Y/n]: ' ANSWER
+					case $ANSWER in
+					 	[Yy] | [Yy][Ee][Ss] | "" ) break;;
+					 	[Nn] | [Nn][Oo] ) echo "Canceled." && exit 2;;
+						* ) echo "Please enter in [Y/n].";;
+					esac
+				done
+				mpv --ytdl-format="bestaudio" --playlist=$PLAYBACK_TARGET
+			fi
+		elif [[ `file "$PLAYBACK_TARGET"* | grep -i audio | wc -l` -gt 1 ]]; then
+			mpv --shuffle $PLAYBACK_TARGET
+		elif [[ `file "$PLAYBACK_TARGET"* | grep -i audio | wc -l` -le 1 ]]; then
+			echo "This can not be shuffled."
+			while true; do
+				read -p 'Do you play without shuffling? [Y/n]: ' ANSWER
+				case $ANSWER in
+					[Yy] | [Yy][Ee][Ss] | "" ) break;;
+					[Nn] | [Nn][Oo] ) echo "Canceled." && exit 2;;
+					* ) echo "Please enter in [Y/n].";;
+				esac
+			done
+			mpv $PLAYBACK_TARGET
+		elif [[ `file "$PLAYBACK_TARGET"* | grep -i "ISO Media" | wc -l` -gt 1 ]]; then
+			mpv --shuffle --no-video-stereo-mode $PLAYBACK_TARGET
+		elif [[ `file "$PLAYBACK_TARGET"* | grep -i "ISO Media" | wc -l` -le 1 ]]; then
+			echo "This can not be shuffled."
+			while true; do
+				read -p 'Do you play without shuffling? [Y/n]: ' ANSWER
+				case $ANSWER in
+					[Yy] | [Yy][Ee][Ss] | "" ) break;;
+					[Nn] | [Nn][Oo] ) echo "Canceled." && exit 2;;
+					* ) echo "Please enter in [Y/n].";;
+				esac
+			done
+			mpv --no-video-stereo-mode $PLAYBACK_TARGET
+		fi
+	#アドレスのglob展開に対応(audio)
+	elif [[ `file $PLAYBACK_TARGET | grep -i audio | wc -l` -gt 1 ]]; then
+		if [[ `file $PLAYBACK_TARGET | grep -i audio | wc -l` -gt 1 ]]; then
+			mpv --shuffle $PLAYBACK_TARGET
+		elif [[ `file $PLAYBACK_TARGET | grep -i audio | wc -l` -lt 1 ]]; then
+			echo "This can not be shuffled." && exit 2
+		fi
+	else
+		echo "This can not be shuffled."
+		while true; do
+			read -p 'Do you play without shuffling? [Y/n]: ' ANSWER
+			case $ANSWER in
+				[Yy] | [Yy][Ee][Ss] | "" ) break;;
+				[Nn] | [Nn][Oo] ) echo -e "\nCanceled." && exit 2;;
+				* ) echo "Please enter in [Y/n].";;
+			esac
+		done
+		mpv $PLAYBACK_TARGET
+	fi
+
+###Play it loop.###
+elif [[ $1 == '-l' ]] \
+	|| [[ ${@:2} == '-l' ]] \
+	|| [[ $1 == '--loop' ]] \
+	|| [[ ${@:2} == '--loop' ]]; then
+	if [[ "$PLAYBACK_TARGET" =~ watch ]] && [[ "$PLAYBACK_TARGET" =~ http ]]; then
+		mpv --ytdl-format="bestaudio" --loop=inf $PLAYBACK_TARGET
+	elif [[ "$PLAYBACK_TARGET" =~ playlist ]] && [[ "$PLAYBACK_TARGET" =~ http ]];then
+		mpv --ytdl-format="bestaudio" --loop-playlist $PLAYBACK_TARGET
+	elif [[ `file $PLAYBACK_TARGET | grep -i audio` =~ audio ]] \
+		|| [[ `file $PLAYBACK_TARGET | grep -i "ISO Media"` =~ "ISO Media" ]] \
+		|| [[ "$PLAYBACK_TARGET" =~ .m3u ]]; then
+		mpv --no-video-stereo-mode --loop=inf $PLAYBACK_TARGET
+	else
+		echo -e "This cannot be playing filetype." && exit 2
+	fi
+
+###Play it shuffle&loop.###
+elif [[ $1 == '-sl' ]] \
+	|| [[ $1 == '-ls' ]] \
+	|| [[ ${@:2} == '-sl' ]] \
+	|| [[ ${@:2} == '-ls' ]] \
+	|| [[ $1 == '--shuffle --loop' ]] \
+	|| [[ $1 == '--loop --shuffle' ]] \
+	|| [[ ${@:2} == '--shuffle --loop' ]] \
+	|| [[ ${@:2} == '--shuffle --loop' ]]; then
+	if [[ $PLAYBACK_TARGET =~ watch ]] && [[ $PLAYBACK_TARGET =~ http ]]; then
+		sleep 1.7s
+		echo -e "\nThis URL cannot be shuffled.\nOnly loop playback is executed.\n"
+		sleep 1.7s
+		mpv --ytdl-format="bestaudio" --shuffle --loop=inf $PLAYBACK_TARGET
+	elif [[ $PLAYBACK_TARGET =~ playlist ]] && [[ $PLAYBACK_TARGET =~ http ]]; then
+		sleep 1.7s
+		echo -e "\nShuffle & loop play Youtube playlist.\n"
+		sleep 1.7s
+		mpv --ytdl-format="bestaudio" --shuffle --loop-playlist --load-unsafe-playlists $PLAYBACK_TARGET
+	elif [[ "$PLAYBACK_TARGET" =~ .m3u ]]; then
+		if [[ `grep -s '' $PLAYBACK_TARGET | grep -v -s '#' | wc -l` -gt 1 ]]; then
+			mpv --ytdl-format="bestaudio" --shuffle --loop-playlist --playlist=$PLAYBACK_TARGET
+		elif [[ `grep -s '' $PLAYBACK_TARGET | grep -v -s '#' | wc -l` -le 1 ]]; then
+			sleep 1.7s
+			echo -e "This can not be shuffled.\nOnly loop playback is executed.\n"
+			sleep 1.7s
+			mpv --ytdl-format="bestaudio" --loop-playlist --playlist=$PLAYBACK_TARGET
+		fi
+	elif [[ -d "$PLAYBACK_TARGET" ]]; then
+		if [[ `file "$PLAYBACK_TARGET"* | grep M3U | wc -l` -gt 1 ]]; then
+			if [[ `grep -s '' "$PLAYBACK_TARGET"* | grep -v -s '#' | wc -l` -gt 1 ]]; then
+				mpv --ytdl-format="bestaudio" --shuffle --loop-playlist --playlist=$PLAYBACK_TARGET
+			elif [[ `grep -s '' "$PLAYBACK_TARGET"* | grep -v -s '#' | wc -l` -le 1 ]]; then
+				sleep 1.7s
+				echo -e "This can not be shuffled.\nOnly loop playback is executed.\n"
+				sleep 1.7s
+				mpv --ytdl-format="bestaudio" --loop-playlist --playlist=$PLAYBACK_TARGET
+			fi
+		elif [[ `file "$PLAYBACK_TARGET"* | grep -i audio | wc -l` -gt 1 ]]; then
+			mpv --shuffle --loop $PLAYBACK_TARGET
+		elif [[ `file "$PLAYBACK_TARGET"* | grep -i audio | wc -l` -le 1 ]]; then
+			sleep 1.7s
+			echo -e "This can not be shuffled.\nOnly loop playback is executed.\n"
+			sleep 1.7s
+			mpv --loop $PLAYBACK_TARGET
+		elif [[ `file "$PLAYBACK_TARGET"* | grep -i "ISO Media" | wc -l` -gt 1 ]]; then
+			mpv --shuffle --loop --no-video-stereo-mode $PLAYBACK_TARGET
+		elif [[ `file "$PLAYBACK_TARGET"* | grep -i "ISO Media" | wc -l` -le 1 ]]; then
+			sleep 1.7s
+			echo -e "This can not be shuffled\nOnly loop playback is executed.\n"
+			sleep 1.7s
+			mpv --loop --no-video-stereo-mode $PLAYBACK_TARGET
+		fi
+	fi
+
+###Play it normal.###
+else
+	if [[ ! $PLAYBACK_TARGET =~ watch ]]; then
+		mpv --ytdl-format="bestaudio" $PLAYBACK_TARGET
+	elif [[ $PLAYBACK_TARGET =~ playlist ]]; then
+		mpv --ytdl-format="bestaudio" --playlist=$PLAYBACK_TARGET
+	else
+		mpv --ytdl-format="bestaudio" $PLAYBACK_TARGET
+	fi
+fi
