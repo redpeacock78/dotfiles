@@ -539,3 +539,28 @@ echo
 if type "figlet" > /dev/null 2>&1; then
 printf "\033[33m$(figlet Welcome! $(echo $USERNAME))\033[00m\n"
 fi
+
+
+###ここから下はWSL用###
+if uname -a | grep Microsoft >/dev/null 2>&1; then
+  ##ディレクトリ##
+  dir=$(pwd)
+  home=$(echo $HOME)
+  if [ ${dir} != ${home} ]; then
+    cd ~/
+  fi
+  ##日本語入力有効化(gnome-terminal使う時とか)##
+  if xdpyinfo >/dev/null 2>&1; then
+    if type "fcitx" >/dev/null 2>&1; then
+      fcitx >/dev/null 2>&1
+    elif [ $? != 0 ]; then
+        :
+    fi
+  fi
+  ##PowerShell,cmd,cmdtool##
+  alias powershell='powershell.exe'
+  alias cmd='cmd.exe'
+  alias cmdtool='/mnt/c/wsl-terminal/cmdtool'
+elif [ $? != 0 ]; then
+    :
+fi
