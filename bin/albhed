@@ -1,0 +1,53 @@
+#! /bin/bash
+
+if [[ $1 == 'tr' ]]; then
+	if [ -p /dev/stdin ]; then
+		echo "$(cat ${@:2})" \
+		| sed y/abcdefghijklmnopqrstuvwxyz/ypltavkrezgmshubxncdijfqow/ \
+		| sed y/あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん/わみふねとあちるてよらきぬへほさひゆせそはしすめおまりくけろやいつれこたをもなにうえのかむん/ \
+		| sed y/がぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽ/だじづでぞばぎぶげぼがびぐべござぢずぜどぷぺぱぽぴ/ \
+		| sed y/アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン/ワミフネトアチルテヨラキヌヘホサヒユセソハシスメオマリクケロヤイツレコタヲモナニウエノカムン/ \
+		| sed y/ガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポ/ダジヅデゾバギブゲボガビグベゴザヂズゼドプペパポピ/
+	else
+		if [[ ${@:2} == "" ]]; then
+			echo "ERROR: Please enter the text."
+			exit 2
+		else
+			echo "${@:2}" \
+			| sed y/abcdefghijklmnopqrstuvwxyz/ypltavkrezgmshubxncdijfqow/ \
+			| sed y/あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん/わみふねとあちるてよらきぬへほさひゆせそはしすめおまりくけろやいつれこたをもなにうえのかむん/ \
+			| sed y/がぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽ/だじづでぞばぎぶげぼがびぐべござぢずぜどぷぺぱぽぴ/ \
+			| sed y/アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン/ワミフネトアチルテヨラキヌヘホサヒユセソハシスメオマリクケロヤイツレコタヲモナニウエノカムン/ \
+			| sed y/ガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポ/ダジヅデゾバギブゲボガビグベゴザヂズゼドプペパポピ/
+		fi
+	fi
+elif [[ $1 == 're' ]]; then
+	if [ -p /dev/stdin ]; then
+		echo "$(cat ${@:2})" \
+		| sed y/ypltavkrezgmshubxncdijfqow/abcdefghijklmnopqrstuvwxyz/ \
+		| sed y/わみふねとあちるてよらきぬへほさひゆせそはしすめおまりくけろやいつれこたをもなにうえのかむん/あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん/ \
+		| sed y/だじづでぞばぎぶげぼがびぐべござぢずぜどぷぺぱぽぴ/がぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽ/ \
+		| sed y/ワミフネトアチルテヨラキヌヘホサヒユセソハシスメオマリクケロヤイツレコタヲモナニウエノカムン/アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン/ \
+		| sed y/ダジヅデゾバギブゲボガビグベゴザヂズゼドプペパポピ/ガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポ/
+	else
+		if [[ ${@:2} == "" ]]; then
+			echo "ERROR: Please enter the text."
+			exit 2
+		else
+			echo "${@:2}" \
+			| sed y/ypltavkrezgmshubxncdijfqow/abcdefghijklmnopqrstuvwxyz/ \
+			| sed y/わみふねとあちるてよらきぬへほさひゆせそはしすめおまりくけろやいつれこたをもなにうえのかむん/あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん/ \
+			| sed y/だじづでぞばぎぶげぼがびぐべござぢずぜどぷぺぱぽぴ/がぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽ/ \
+			| sed y/ワミフネトアチルテヨラキヌヘホサヒユセソハシスメオマリクケロヤイツレコタヲモナニウエノカムン/アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン/ \
+			| sed y/ダジヅデゾバギブゲボガビグベゴザヂズゼドプペパポピ/ガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポ/
+		fi
+	fi
+elif [[ $1 == 'help' ]] || [[ $1 = "" ]]; then
+	printf "Commands:\n\talbhed tr [TEXT] #Translation text to Al Bhed Langage.\n\talbhed re [TEXT] #Translation from Al Bhed Langage text.\n\talbhed help\t #Show help.\n\talbhed version\t #Show version.\n\n"
+elif [[ $1 == 'version' ]]; then
+	printf "AlBhedTrans v1.0\n"
+elif [[ $1 != 'tr' ]] || [[ $1 != 're' ]] || [[ $1 != 'help' ]]; then
+	printf "ERROR: \"albhed\" was called with arguments ["$1"]\nUsage: \"albhed\" [tr] [re] [help]\n"
+	exit 2
+fi
+

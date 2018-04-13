@@ -1,5 +1,18 @@
+###zsh高速化のために。zshrcをcompile###
+if [ -f ~/.zshrc.zwc ]; then
+  if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
+    zcompile ~/.zshrc
+  fi
+else
+    zcompile ~/.zshrc
+fi
+
 ###tmux###
-[[ -z "$TMUX" && ! -z "$PS1" ]] && tmux
+if [ -f $HOME/.tmux.conf ]; then
+if type "tmux" > /dev/null 2&>1; then
+  [[ -z "$TMUX" && ! -z "$PS1" ]] && tmux
+fi
+fi
 
 function exit-tmux() {
 	exit tmux
@@ -104,24 +117,50 @@ export PATH="$HOME/swift-3.0.2-RELEASE-ubuntu16.04/usr/bin:$PATH"
 export PATH="$HOME/.pyenv/shims:$PATH"
 ##ryby-PATH##
 export PATH="/usr/local/bingem$PATH"
+export PATH="$HOME/.rbenv/shims:$PATH"
+export PATH="$HOME/.rbenv/bin:$PATH"
+###npm-PATH###
+export PATH=~/.npm-global/bin:$PATH
+###yarn=PATH###
+export PATH="$HOME/.linuxbrew/Cellar/yarn/1.5.1_1/bin:$PATH"
+export PATH="$PATH:`yarn global bin`"
+export PATH="$PATH:`yarn bin`"
 ###C#(mono)-PATH###
 export PATH="/opt/mono/bin:$PATH"
 ###GO-PATH##
 export GOPATH="$HOME/go"
 export PATH="$HOME/go/bin:/usr/local/go/bin:$PATH"
+export GOENV_ROOT=$HOME/.goenv
+export PATH=$GOENV_ROOT/bin:$PATH
+eval "$($HOME/.linuxbrew/bin/goenv init -)"
 ##ShellScript-PATH##
 export PATH="$HOME/bin:$PATH"
 ###etc-PATH###
-export PATH="/usr/games/:$PATH"
+export PATH="/usr/games:$PATH"
 ###coreutils###
 export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
-###fink##
+###fink###
+if [ -f /sw/bin/init.sh ]; then
 source /sw/bin/init.sh
+fi
 ###独自コマンド###
 export PATH="$HOME/bin:$PATH"
 ###coreutils###
-export PATH=$(brew --prefix coreutils)/libexec/gnubin:$PATH
+if type "brew" > /dev/null 2>&1; then
+  export PATH=$(brew --prefix coreutils)/libexec/gnubin:$PATH
+  export PATH="$HOME/.linuxbrew/opt/coreutils/bin:$PATH"
+fi
+
+###Linuxbrew###
+if [ -e $HOME/.linuxbrew ]; then
+  export PATH="$HOME/.linuxbrew/bin:$PATH"
+  export PATH="$HOME/.linuxbrew/sbin:$PATH"
+  export MANPATH="$HOME/.linuxbrew/share/man:$MANPATH"
+  export INFOPATH="$HOME/.linuxbrew/share/info:$INFOPATH"
+  export XDG_DATA_DIRS="$HOME/.linuxbrew/share:$XDG_DATA_DIRS"
+  export LD_LIBRARY_PATH="$HOME/.linuxbrew/lib:$LD_LIBRARY_PATH"
+fi
 
 ##Ricty(powerline)関連##
 export PATH="/usr/local/opt/sqlite/bin:$PATH"
@@ -157,7 +196,7 @@ function _update_vcs_info_msg() {
     psvar[2]=$(_git_not_pushed)
   }
   function _git_not_pushed() {
-    if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]; then
+    if [[ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" =~ "true" ]]; then
       head="$(git rev-parse HEAD)"
       for x in $(git rev-parse --remotes)
       do
@@ -174,9 +213,11 @@ function _update_vcs_info_msg() {
 ###プロンプト表示設定###
 
 function prompt_update () {
-if [[ `git status 2>&1` =~ "Not a git" ]]; then
+git status >/dev/null 2>&1
+git=$?
+if [ ! $git -eq 0 ]; then
   prompt="%B%(?.%(!.${PURPLE}.${GREEN}).${RED})%n"@"%m${DEFAULT}:${BLUE}%~${DEFAULT}%b%(!.#.$) "
-elif [[ ! `git status 2>&1` =~ "On brunch" ]]; then
+elif [ $git -eq 0 ]; then
   prompt="%B%(?.%(!.${PURPLE}.${GREEN}).${RED})%n"@"%m${DEFAULT}%b\n${BLUE}%~${DEFAULT}%b${vcs_info_msg_0_}[`cat <(git show -s --format=%H | cut -c 1-7)`]${vcs_info_msg_1_} "
 fi
 echo -e "$prompt"
@@ -252,11 +293,19 @@ if [ -f /usr/local/bin/gecho ]; then
 alias echo="/usr/local/bin/gecho"
 fi
 alias /='../'
-alias ls="ls -F --color=auto"
-alias la="ls -A --color=auto"
-alias ll="ls -l --color=auto"
-alias lsr="ls -lR --color=auto"
-alias lst="ls -ltr --color=auto"
+if [ -d /usr/local/opt/coreutils/ ] || [ "$(uname)" == 'Linux' ]; then
+  alias ls="ls -F --color=auto"
+  alias la="ls -A --color=auto"
+  alias ll="ls -l --color=auto"
+  alias lsr="ls -lR --color=auto"
+  alias lst="ls -ltr --color=auto"
+else
+  alias ls="ls -FG"
+  alias la="ls -AG"
+  alias ll="ls -lG"
+  alias lsr="ls -lRG"
+  alias lst="ls -ltrG"
+fi
 alias rm="rm -i"
 alias cp="cp -i"
 alias mv="mv -i"
@@ -388,62 +437,63 @@ alias githst='git log --graph --date=short --pretty=format:"%Cgreen%h %cd %Cblue
 ##スクリプト言語##
 #pythonのファイル指定で実行#
 alias -s py='(){ for P in *.py; do
-shift && python $P $@ 
-done}'
+                shift && python $P $@ 
+                done }'
 #rubyのファイル指定で実行#
 alias -s rb='(){ for R in *.rb; do
-shift && ruby $R $@ 
-done}'
+                shift && ruby $R $@ 
+                done }'
 #swiftのファイル指定で実行#
 alias -s swift='(){ for S in *.swift; do
-shift && swift $S $@ 
-done}'
+                    shift && swift $S $@ 
+                    done }'
 #perlのファイル指定で実行#
 alias -s pl='(){ for P in *.pl; do
-shift && perl $P $@ 
-done}'
+                shift && perl $P $@ 
+                done }'
 #PowerShellスクリプトをファイル指定で実行
 alias -s ps1='(){ for P in *.ps1; do
-chmod a+x $P && shift && ./$P $@ 
-done}'
+                 chmod a+x $P && shift && ./$P $@ 
+                 done }'
 ##コンパイラ言語##
 #C言語、C++をファイル指定でコンパイル及び実行#
-alias -s {c,cc,cp,cpp,cxx}='(){ gcc -o ${1%.*} $1 && shift && ./${1%.*} $@ }'
+alias -s {c,cc,cp,cxx}='(){ gcc -o ${1%.*} $1 && shift && ./${1%.*} $@ }'
+alias -s cpp='(){ g++ -o ${1%.*} $1 && ./${1%.*} }'
 #C#をコンパイル及び実行#
 alias -s cs='(){ for C in *.cs; do
-mcs $C && shift && ./${C/.cs/.exe} $@ 
-done}'
+                mcs $C && shift && ./${C/.cs/.exe} $@ 
+                done }'
 #object-Cをコンパイル及び実行#
 alias -s m='(){ for M in *.m;do
-gcc $M -o ${M%.*} && shift && ./${M%.*} $@ 
-done}'
+               gcc $M -o ${M%.*} && shift && ./${M%.*} $@ 
+               done }'
 #javaをコンパイル及び実行#
 alias -s java='(){ for J in *.java; do
-javac $J && shift && java ${J%.*} $@ 
-done}'
+                  javac $J && shift && java ${J%.*} $@ 
+                  done }'
 
 ##ファイル解凍##
 #それぞれの拡張子に合わせてファイルを解凍#
-alias -s {gz,tgz,zip,lzh,bz2,tbz,Z,tar,arj,xz,rar,7z}='(){case $1 in
-*.tar.gz|*.tgz) tar xzv ;;
-*.tar.xz) tar Jxvf $1;;
-*.zip) unzip -Z -;;
-*.lzh) lha e $1;;
-*.tar.bz2|*.tbz) tar xjvf $1;;
-*.tar.Z) tar zxvf $1;;
-*.gz) gzip -d $1;;
-*.bz2) bzip2 -dc $1;;
-*.Z) uncompress $1;;
-*.tar) tar xvf $1;;
-*.arj) unarj $1;;
-*.rar) unrar $1;;
-*.7z) 7z $1;;
-esac}'
+alias -s {gz,tgz,zip,lzh,bz2,tbz,Z,tar,arj,xz,rar,7z}='(){ case $1 in
+                                                          *.tar.gz | *.tgz) tar xzv ;;
+                                                          *.tar.xz) tar Jxvf $1;;
+                                                          *.zip) unzip -Z -;;
+                                                          *.lzh) lha e $1;;
+                                                          *.tar.bz2 | *.tbz) tar xjvf $1;;
+                                                          *.tar.Z) tar zxvf $1;;
+                                                          *.gz) gzip -d $1;;
+                                                          *.bz2) bzip2 -dc $1;;
+                                                          *.Z) uncompress $1;;
+                                                          *.tar) tar xvf $1;;
+                                                          *.arj) unarj $1;;
+                                                          *.rar) unrar $1;;
+                                                          *.7z) 7z $1;;
+                                                          esac }'
 ##パッケージインストール・変換##
-alias -s {deb,rpm}='(){case $1 in
-*.deb) sudo gdebi $1;;
-*.rpm) sudo alien -i $1;;
-esac}'
+alias -s {deb,rpm}='(){ case $1 in
+                       *.deb) sudo gdebi $1;;
+                       *.rpm) sudo alien -i $1;;
+                        esac }'
 ###exeファイル###
 if [[ `uname` =~ "Ubuntu" ]]; then
 alias -s exe='(){wine env XMODIFIERS="@im=fcitx" $1}'
@@ -472,6 +522,11 @@ alias ffsiro='cat /home/redpeacock978/5205723/siro.txt | sed -e "s/#<undef>//"'
 ##果物##
 alias banana='echo "\xf0\x9f\x8d\x8c"'
 
+###CPU温度###
+if type "vcgencmd" > /dev/null 2&>1; then
+  alias cputemp='vcgencmd measure_temp | sed -e "s/temp=//g"'
+fi
+
 ###256色表示###
 function 256() {
     local code
@@ -481,4 +536,6 @@ function 256() {
 echo
 }
 
+if type "figlet" > /dev/null 2>&1; then
 printf "\033[33m$(figlet Welcome! $(echo $USERNAME))\033[00m\n"
+fi
